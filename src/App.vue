@@ -1,8 +1,14 @@
 <template>
   <div id="app">
     <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
+      <router-link to="/about">About</router-link> |
+      <router-link to="/transfer">穿梭框</router-link> |
+      <router-link to="/pageTable">分页表格</router-link> |
+      <router-link to="/upload">上传</router-link> |
+      <router-link to="/download">下载</router-link> |
+      <router-link to="/pageDetail">详情页</router-link> |
+      <router-link to="/virtualList">虚拟列表</router-link> |
+      <router-link to="/crud">crud</router-link> |
     </div>
     <router-view/>
   </div>
