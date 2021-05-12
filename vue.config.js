@@ -23,5 +23,10 @@ module.exports = {
       warnings: false,
       errors: false
     },
+  },
+  configureWebpack: {
+    externals: {
+      './cptable': 'var cptable'
+    }
   }
 }

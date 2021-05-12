@@ -9,6 +9,7 @@
       <router-link to="/pageDetail">详情页</router-link> |
       <router-link to="/virtualList">虚拟列表</router-link> |
       <router-link to="/crud">crud</router-link> |
+      <router-link to="/video">录屏</router-link> |
     </div>
     <router-view/>
   </div>

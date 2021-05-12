@@ -1,6 +1,10 @@
 <!-- 读取上传文件 -->
 <template>
   <div>
+    <div>
+      参考：
+      https://www.cnblogs.com/liuxianan/p/js-excel.html
+    </div>
     <!-- 测试一 -->
     <Divider>测试一: 原生js + html + txt 上传</Divider>
     上传文件 ： <input type="file" name = "file" id = "fileId" /> 
@@ -244,6 +248,7 @@ export default {
         //   console.log(`第${i+1}个文件；   ${e.target.result}`)
         // }
         await this.readWorkbookFromLocalFile_test4(files[i]).then((workbook) => {
+          debugger
           let sheetNames = workbook.SheetNames; // 工作表名称集合
           for(let j = 0; j < sheetNames.length; j ++) {
             this.sheetInfo.SheetNames.push(sheetNames[j]);
