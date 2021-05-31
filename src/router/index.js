@@ -82,6 +82,54 @@ Vue.use(VueRouter)
     // which is lazy-loaded when the route is visited.
     component: () => import(/* webpackChunkName: "video" */ '../views/Video.vue')
   },
+  {
+    path: '/descode',
+    name: 'descode',
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "descode" */ '../views/Descode.vue')
+  },
+  {
+    path: '/loca1',
+    name: 'loca1',
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "loca1" */ '../views/WarRoom/loca1.vue')
+  },
+  {
+    path: '/online1',
+    name: 'online1',
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "online1" */ '../views/WarRoom/online1.vue')
+  },
+  {
+    path: '/many',
+    name: 'many',
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "many" */ '../views/WarRoom/many.vue')
+  },
+  {
+    path: '/whiteboard',
+    name: 'whiteboard',
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "whiteboard" */ '../views/WarRoom/whiteboard.vue')
+  },
+  {
+    path: '/palette',
+    name: 'palette',
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "palette" */ '../views/WarRoom/palette.vue')
+  },
 ]
 
 const router = new VueRouter({

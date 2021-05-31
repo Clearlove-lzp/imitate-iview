@@ -10,6 +10,12 @@
       <router-link to="/virtualList">虚拟列表</router-link> |
       <router-link to="/crud">crud</router-link> |
       <router-link to="/video">录屏</router-link> |
+      <router-link to="/descode">des加密解密</router-link> |
+      <router-link to="/loca1">1V1本地视频</router-link> |
+      <router-link to="/online1">1V1在线视频</router-link> |
+      <router-link to="/many">多人视频</router-link> |
+      <router-link to="/whiteboard">白板演示</router-link> |
+      <router-link to="/palette">共享画板</router-link> |
     </div>
     <router-view/>
   </div>
