@@ -16,6 +16,7 @@
       <router-link to="/many">多人视频</router-link> |
       <router-link to="/whiteboard">白板演示</router-link> |
       <router-link to="/palette">共享画板</router-link> |
+      <router-link to="/Websocket">Websocket</router-link> |
     </div>
     <router-view/>
   </div>
