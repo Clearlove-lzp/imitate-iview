@@ -162,6 +162,7 @@ export default {
       this.initPeer(data); // 获取到媒体流后，调用函数初始化 RTCPeerConnection
     },
     initPeer(data) {
+      // 两个不同角色，分别设置peer，两个peer分别添加本地流，两个peer实现关联，即可视为一个通道
       // 创建输出端 PeerConnection
       let PeerConnection = window.RTCPeerConnection || window.mozRTCPeerConnection || window.webkitRTCPeerConnection;
       this.peer = new PeerConnection();

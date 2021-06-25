@@ -16,6 +16,7 @@
       <router-link to="/many">多人视频</router-link> |
       <router-link to="/whiteboard">白板演示</router-link> |
       <router-link to="/palette">共享画板</router-link> |
+      <router-link to="/warRoom">作战室</router-link> |
       <router-link to="/Websocket">Websocket</router-link> |
     </div>
     <router-view/>
@@ -29,5 +30,5 @@
   -moz-osx-font-smoothing grayscale
   text-align center
   color #2c3e50
-  margin-top 60px
+  margin-top 10px
 </style>

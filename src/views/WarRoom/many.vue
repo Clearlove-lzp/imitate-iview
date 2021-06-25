@@ -118,7 +118,7 @@
         })
       },
       getPeerConnection(v) {
-          let videoBox = this.$refs['video-box'];
+        let videoBox = this.$refs['video-box'];
         let iceServer = {
           "iceServers": [
             {
@@ -156,10 +156,11 @@
             socket.emit('__ice_candidate', {'candidate': event.candidate, roomid: this.$route.params.roomid, account: v.account});
           }
         };
-        // console.log('v.account', v.account);
+        console.log('v.account', v.account);
         this.peerList[v.account] = peer;
       },
       createOffer(account, peer) {
+        // 我新进入，我给
         //发送offer，发送本地session描述
         peer.createOffer({
             offerToReceiveAudio: 1,
@@ -172,6 +173,7 @@
         });
       },
       socketInit() {
+        // 我 peerList也是我的peerList，我接收，我给peerList[v.account]设置远程描述
         socket.on('offer', v => {
             // console.log('take_offer', this.peerList[v.account]);
           this.peerList[v.account] && this.peerList[v.account].setRemoteDescription(v.sdp, () => {
@@ -225,7 +227,9 @@
       //           this.getPeerConnection(obj);
       //         }
       //       });
+      //       李,小,龙三人,对于李来说 this.peerList = {小-李, 李-龙}, 对于小来说 this.peerList = {小-李, 小-龙}, 对于龙来说 this.peerList = {小-龙, 李-龙}，李的小-李和小的小-李不同，类似于独立的peerA和peerB，这里为多人通话，不至于混乱，相当于唯一标识，取名一样。只有实现关联才能视为一个通道
       //       if (account === this.$route.params.account) {
+      //         // 新加入
       //         // console.log('account', account);
       //         for (let k in this.peerList) {
       //           this.createOffer(k, this.peerList[k]);

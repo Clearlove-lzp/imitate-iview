@@ -182,7 +182,7 @@
       },
       initSocket() {
         socket.on('joined', (data) =>{
-            this.userList = data;
+          this.userList = data;
         });
         socket.on('reply', async data =>{ // 收到回复
           this.loading = false;
