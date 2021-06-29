@@ -23,6 +23,24 @@
   </div>
 </template>
 
+<script>
+export default {
+  props: {},
+  data () {
+    return {
+    };
+  },
+  components: {},
+  computed: {},
+  methods: {},
+  watch: {},
+  mounted() {},
+  created() {
+    console.log(process.env)
+  },
+}
+</script>
+
 <style lang="stylus">
 #app
   font-family Avenir, Helvetica, Arial, sans-serif
