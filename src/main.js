@@ -6,6 +6,9 @@ import ViewUI from 'view-design';
 import 'view-design/dist/styles/iview.css';
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
+import VueCompositionAPI from '@vue/composition-api'
+
+Vue.use(VueCompositionAPI)
 
 Vue.use(ViewUI);
 Vue.use(ElementUI);

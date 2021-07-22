@@ -146,6 +146,14 @@ Vue.use(VueRouter)
     // which is lazy-loaded when the route is visited.
     component: () => import(/* webpackChunkName: "warRoom" */ '../views/WarRoom/warRoom.vue')
   },
+  {
+    path: '/hookTest',
+    name: 'hookTest',
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "hookTest" */ '../views/hookTest/index.vue')
+  },
 ]
 
 const router = new VueRouter({

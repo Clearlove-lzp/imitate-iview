@@ -18,6 +18,7 @@
       <router-link to="/palette">共享画板</router-link> |
       <router-link to="/warRoom">作战室</router-link> |
       <router-link to="/Websocket">Websocket</router-link> |
+      <router-link to="/hookTest">vue3增删改查hook测试</router-link> |
     </div>
     <router-view/>
   </div>
