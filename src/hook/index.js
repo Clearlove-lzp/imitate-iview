@@ -1,8 +1,25 @@
 
-import { ref, reactive } from '@vue/composition-api';
+import { ref, reactive, onMounted, nextTick, computed, provide, inject, getCurrentInstance } from '@vue/composition-api';
 import _ from 'lodash';
- 
+import echarts from 'echarts';
+import Bus from '@/utils/bus.js'
+export const useLoading = () => { // loading状态
+  const loading = ref(false);
+  const showLoading = () => {
+    loading.value = true;
+  }
+  const closeLoading = () => {
+    loading.value = false;
+  }
+  return {
+    loading,
+    showLoading,
+    closeLoading
+  }
+}
+
 export const useModal = () => { // 模态框开关
+  const { loading, showLoading, closeLoading } = useLoading()
   const visible = ref(false);
   const showModal = () => {
     visible.value = true;
@@ -13,7 +30,10 @@ export const useModal = () => { // 模态框开关
   return {
     visible,
     showModal,
-    closeModal
+    closeModal,
+    loading,
+    showLoading,
+    closeLoading
   }
 }
 
@@ -44,29 +64,14 @@ export const usePage = () => { // 分页
   }
 }
 
-export const useLoading = () => { // loading状态
-  const loading = ref(false);
-  const showLoading = () => {
-    loading.value = true;
-  }
-  const closeLoading = () => {
-    loading.value = false;
-  }
-  return {
-    loading,
-    showLoading,
-    closeLoading
-  }
-}
-
 export const useForm = (form) => {
   let base = form ? form : {};
   const AppliForm = reactive(_.cloneDeep(base));
 
   const formRef = ref(null)
 
-  const resetForm = (bool) => {
-    if(bool) {
+  const resetForm = (validCheck) => {
+    if(validCheck) {
       formRef.value.resetFields();
     }else{
       Object.keys(AppliForm).map(x => {
@@ -91,8 +96,200 @@ export const useForm = (form) => {
   }
 }
 
-// export const useTable = () => { // 表格
-//   const { loading, showLoading, closeLoading } = userLoading
-//   return {
-//   }
-// }
+export const useUpload = (url) => { // 上传控件
+  const token = window.localStorage.getItem("token");
+  const action = url;
+  const defaultList = ref([])
+  const showUploadBtn = ref(true);
+  const hideUploadBtn = () => {
+    showUploadBtn.value = false;
+  }
+  const visibleUploadBtn = () => {
+    showUploadBtn.value = true;
+  }
+  return {
+    token,
+    action,
+    defaultList,
+    showUploadBtn,
+    hideUploadBtn,
+    visibleUploadBtn
+  }
+}
+
+export const useTable = (key) => { // 表格
+  const { loading, showLoading, closeLoading } = useLoading()
+  const datalist = ref([]); // 所有数据
+  // 多选
+  const selectionlist = ref([]); // 选择的数据
+  const onSelect = (selection, row) => { // 选中某一项
+    selectionlist.value.push(row)
+  }
+  const onSelectCancel = (selection, row) => { // 取消选中某一项
+    selectionlist.value = selectionlist.value.filter(x => {
+      return x[key] !== row[key]
+    })
+  }
+  const onSelectAll = (selection) => { // 选中当前页所有项
+    selection.map(x => {
+      let idx = selectionlist.value.findIndex(y => {
+        return x[key] === y[key]
+      })
+      if(idx < 0) {
+        selectionlist.value.push(x)
+      }
+    })
+  }
+  const onSelectAllCancel = (selection) => { // 取消选中当前页所有项
+    selection.map(x => {
+      let idx = selectionlist.value.findIndex(y => {
+        return x[key] === y[key]
+      })
+      if(idx > -1) {
+        selectionlist.value.splice(idx, 1)
+      }
+    })
+  }
+  const onSelectionChange = (selection) => { // 选中项发生变化时
+    selection.map(x => {
+      let idx = selectionlist.value.findIndex(y => {
+        return x[key] === y[key]
+      })
+      if(idx > -1) {
+        selectionlist.value.splice(idx, 1)
+      }else{
+        selectionlist.value.push(x)
+      }
+    })
+  }
+  const selectDefault = (arr) => { // 默认选中部分
+    datalist.value.map((x, i) => {
+      let idx = arr.findIndex(y => {
+        return x[key] === y[key]
+      })
+      if(idx > -1) {
+        datalist.value[i]._checked = true;
+      }else{
+        datalist.value[i]._checked = false;
+      }
+    })
+  }
+  const selectDisabled = (arr) => { // 默认禁用
+    datalist.value.map((x, i) => {
+      let idx = arr.findIndex(y => {
+        return x[key] === y[key]
+      })
+      if(idx > -1) {
+        datalist.value[i]._disabled = true;
+      }else{
+        datalist.value[i]._disabled = false;
+      }
+    })
+  }
+  return {
+    datalist,
+    loading,
+    showLoading,
+    closeLoading,
+    selectionlist,
+    onSelect,
+    onSelectCancel,
+    onSelectAll,
+    onSelectAllCancel,
+    onSelectionChange,
+    selectDefault,
+    selectDisabled
+  }
+}
+
+export const useEcharts = () => { // echarts
+  const echartRef = ref(null);
+  const datalist = ref([]);
+  const myChart = ref(null);
+  const option = ref({});
+
+  const clearChart = () => {
+    myChart.value.clear();
+  }
+
+  const initChart = () => {
+    myChart.value = echarts.init(echartRef); 
+    // 绘制图表
+    clearChart()
+    myChart.value.setOption(option.value);
+  }
+
+  onMounted(() => {
+    window.onresize = () => {
+      if(myChart.value) {
+        nextTick(() => {
+          myChart.value.resize()
+        })
+      }
+    }
+  })
+  return {
+    echartRef,
+    datalist,
+    myChart,
+    option,
+    initChart,
+    clearChart
+  }
+}
+
+export const useVuex = () => { // vuex
+  
+}
+
+export const useProvide = () => { // provide
+  const result = ref(null);
+  const provideFunc = (name, data) => {
+    result.value = data;
+    provide(name, result.value);
+  }
+  const injectFunc = (name) => {
+    result.value = inject(name);
+  }
+  return {
+    result,
+    provideFunc,
+    injectFunc
+  }
+}
+
+export const useBus = () => { // bus传值
+  return {
+    Bus
+  }
+}
+
+const getRouterFromInstance = () => {
+  const vm = getCurrentInstance();
+  if (!vm) {
+    throw new Error('必须在setup()方法里使用!!')
+  }
+  const router = vm.proxy.$router;
+  return {
+    router
+  }
+}
+
+const getRouteFromInstance = () => {
+  const vm = getCurrentInstance();
+  if (!vm) {
+      throw new Error('必须在setup()方法里使用!!')
+  }
+  const route = vm.proxy.$route;
+  return {
+    route
+  }
+}
+
+export const useRouter = () => {  // 获取router
+  return getRouterFromInstance();
+}
+
+export const useRoute = () => { // 获取 route
+  return getRouteFromInstance();
+}
