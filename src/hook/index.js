@@ -2,7 +2,7 @@
 import { ref, reactive, onMounted, nextTick, computed, provide, inject, getCurrentInstance } from '@vue/composition-api';
 import _ from 'lodash';
 import echarts from 'echarts';
-import Bus from '@/utils/bus.js'
+ 
 export const useLoading = () => { // loading状态
   const loading = ref(false);
   const showLoading = () => {
@@ -239,7 +239,32 @@ export const useEcharts = () => { // echarts
 }
 
 export const useVuex = () => { // vuex
+  const vm = getCurrentInstance();
+  if (!vm) {
+    throw new Error('必须在setup()方法里使用!!')
+  }
+  const store = vm.proxy.$store;
   
+  const useState = (key, namespaced) => {
+    if(namespaced) {
+      return computed(() => store.state[namespaced][key])
+    }
+    return computed(() => store.state[key]);
+  }
+
+  const useMutations = (key, ...data) => {
+    store.commit(key, ...data)
+  }
+
+  const useActions = (mutation, ...data) => {
+    store.dispatch(mutation, ...data)
+  }
+
+  return {
+    useState,
+    useMutations,
+    useActions
+  }
 }
 
 export const useProvide = () => { // provide
@@ -258,13 +283,43 @@ export const useProvide = () => { // provide
   }
 }
 
+class BusEvent {
+  constructor() {
+    // 收集订阅信息,调度中心
+    this.list = {};
+  }
+
+  // 订阅
+  $on(name, fn) {
+    this.list[name] = this.list[name] || [];
+    this.list[name].push(fn);
+  }
+
+  // 发布
+  $emit(name, data) {
+    if (this.list[name]) {
+      this.list[name].forEach(fn => {
+        fn(data);
+      });
+    }
+  }
+
+  // 取消订阅
+  $off(name) {
+    if (this.list[name]) {
+      delete this.list[name];
+    }
+  }
+}
+const Bus = new BusEvent()
+
 export const useBus = () => { // bus传值
   return {
     Bus
   }
 }
 
-const getRouterFromInstance = () => {
+export const useRouter = () => {  // 获取router
   const vm = getCurrentInstance();
   if (!vm) {
     throw new Error('必须在setup()方法里使用!!')
@@ -275,7 +330,7 @@ const getRouterFromInstance = () => {
   }
 }
 
-const getRouteFromInstance = () => {
+export const useRoute = () => { // 获取 route
   const vm = getCurrentInstance();
   if (!vm) {
       throw new Error('必须在setup()方法里使用!!')
@@ -286,10 +341,9 @@ const getRouteFromInstance = () => {
   }
 }
 
-export const useRouter = () => {  // 获取router
-  return getRouterFromInstance();
-}
-
-export const useRoute = () => { // 获取 route
-  return getRouteFromInstance();
+export const useUserInfo = () => { // 用户基本信息
+  const userInfo = JSON.parse(window.localStorage.getItem('userInfo'));
+  return {
+    userInfo
+  }
 }
