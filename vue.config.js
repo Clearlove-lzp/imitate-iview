@@ -40,6 +40,9 @@ module.exports = {
   },
   chainWebpack: config => {
     config.optimization.minimize(true);
+    config.resolve.alias
+      .set('@', resolve('src'))
+      .set('@assets',resolve('src/assets'))
   }
   // chainWebpack  // 是一个函数，会接收一个基于 webpack-chain 的 ChainableConfig 实例。允许对内部的 webpack 配置进行更细粒度的修改。
 }

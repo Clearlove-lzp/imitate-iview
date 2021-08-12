@@ -4,7 +4,36 @@ import { ref, reactive, onMounted, nextTick, computed,
   watch, onUpdated, onBeforeUnmount } from '@vue/composition-api';
  import _ from 'lodash';
  import echarts from 'echarts';
-  
+ 
+ // 使用es6解构，可任意设置变量
+ export const useState = (value) => { // 模拟react hook useState
+   const state = typeof value === 'function' ? ref(value()) : ref(value);
+   const setState = (newValue) => {
+     state.value = newValue;
+   }
+   return [state, setState]
+ }
+ 
+ export const useEffect = (callback, array) => { // 模拟react hook useEffect
+   let func
+   onMounted(() => {
+     func = callback()
+   })
+   onUpdated(() => {
+     if(!array) {  // 不传array,只要更新就触发
+       func = callback()
+     }
+   })
+   onBeforeUnmount(() => {
+     if(typeof func === 'function') { // return函数得情况下 消除effect
+       func()
+     }
+   })
+   array && watch(array, (newValue, oldValue) => { // array传值监听
+     func = callback()
+   })
+ }
+ 
  export const useLoading = () => { // loading状态
    const loading = ref(false);
    const showLoading = () => {
@@ -21,21 +50,13 @@ import { ref, reactive, onMounted, nextTick, computed,
  }
  
  export const useModal = () => { // 模态框开关
-   const { loading, showLoading, closeLoading } = useLoading()
-   const visible = ref(false);
-   const showModal = () => {
-     visible.value = true;
-   }
-   const closeModal = () => {
-     visible.value = false;
-   }
+   const [loading, setLoading] = useState(false);
+   const [visible, setVisible] = useState(false);
    return {
      visible,
-     showModal,
-     closeModal,
+     setVisible,
      loading,
-     showLoading,
-     closeLoading
+     setLoading
    }
  }
  
@@ -120,8 +141,8 @@ import { ref, reactive, onMounted, nextTick, computed,
  }
  
  export const useTable = (key) => { // 表格
-   const { loading, showLoading, closeLoading } = useLoading()
-   const datalist = ref([]); // 所有数据
+   const [loading, setLoading] = useState(false)
+   const datalist = ref([])
    // 多选
    const selectionlist = ref([]); // 选择的数据
    const onSelect = (selection, row) => { // 选中某一项
@@ -191,8 +212,7 @@ import { ref, reactive, onMounted, nextTick, computed,
    return {
      datalist,
      loading,
-     showLoading,
-     closeLoading,
+     setLoading,
      selectionlist,
      onSelect,
      onSelectCancel,
@@ -348,33 +368,4 @@ import { ref, reactive, onMounted, nextTick, computed,
    return {
      userInfo
    }
- }
- 
- // 使用es6解构，可任意设置变量
- export const useState = (value) => { // 模拟react hook useState
-   const state = ref(value);
-   const setState = (newValue) => {
-     state.value = newValue;
-   }
-   return [state, setState]
- }
- 
- export const useEffect = (callback, array) => { // 模拟react hook useEffect
-   let func
-   onMounted(() => {
-     func = callback()
-   })
-   onUpdated(() => {
-     if(!array) {  // 不传array,只要更新就触发
-       func = callback()
-     }
-   })
-   onBeforeUnmount(() => {
-     if(typeof func === 'function') { // return函数得情况下 消除effect
-       func()
-     }
-   })
-   array && watch(array, (newValue, oldValue) => { // array传值监听
-     func = callback()
-   })
  }
