@@ -1,3 +1,5 @@
+// const path = require('path');
+
 module.exports = {
   publicPath: './', // 部署应用包时的基本 URL。这个值也可以被设置为空字符串 ('') 或是相对路径 ('./')，这样所有的资源都会被链接为相对路径，这样打出来的包可以被部署在任意路径，
   outputDir: process.env.VUE_APP_OUTPUTDIR, // 生成的生产环境构建文件的目录
@@ -40,9 +42,9 @@ module.exports = {
   },
   chainWebpack: config => {
     config.optimization.minimize(true);
-    config.resolve.alias
-      .set('@', resolve('src'))
-      .set('@assets',resolve('src/assets'))
+    // config.resolve.alias
+    //   .set('@', path.resolve('src'))
+    //   .set('@assets', path.resolve('src/assets'))
   }
   // chainWebpack  // 是一个函数，会接收一个基于 webpack-chain 的 ChainableConfig 实例。允许对内部的 webpack 配置进行更细粒度的修改。
 }

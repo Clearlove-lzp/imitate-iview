@@ -38,8 +38,8 @@
 </template>
 
 <script>
-import { reactive, onMounted, ref, computed } from "@vue/composition-api"
-import { useModal, useForm, useLoading } from '@/hook/index'
+import { ref } from "@vue/composition-api"
+import { useModal } from '@/hook/index'
 
 export default {
   props: {},

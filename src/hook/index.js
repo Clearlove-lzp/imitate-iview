@@ -3,7 +3,7 @@ import { ref, reactive, onMounted, nextTick, computed,
   provide, inject, getCurrentInstance, 
   watch, onUpdated, onBeforeUnmount } from '@vue/composition-api';
  import _ from 'lodash';
- import echarts from 'echarts';
+ import * as echarts from 'echarts';
  
  // 使用es6解构，可任意设置变量
  export const useState = (value) => { // 模拟react hook useState

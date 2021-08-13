@@ -132,67 +132,67 @@ export default {
   setup(props, context) {
 
     // 查询表单
-    const form = {
-      activityTheme: "",
-      time: [],
-      desc: "",
-      createUser: ""
-    }
-    const { AppliForm, resetForm } = useForm(form)
+const form = {
+  activityTheme: "",
+  time: [],
+  desc: "",
+  createUser: ""
+}
+const { AppliForm, resetForm } = useForm(form)
 
 
-    const { pages, queryPageFunc, queryCurrentFunc, queryLimitFunc } = usePage(); // 分页器
+const { pages, queryPageFunc, queryCurrentFunc, queryLimitFunc } = usePage(); // 分页器
 
 
-    const { loading, showLoading, closeLoading } = useLoading() // loading控制器
+const { loading, showLoading, closeLoading } = useLoading() // loading控制器
 
 
-    const datalist = ref([]);
-    // 查询  表格数据
-    const query = () => {
-      let params = `currentPage=${pages.current}&pageSize=${pages.limit}`;
-      if(AppliForm.time[0]) {
-        params += `&activityTimeBegin=${new Date(AppliForm.time[0]).Format('yyyy-MM-dd hh:mm:ss')}`
-        params += `&activityTimeEnd=${new Date(AppliForm.time[1]).Format('yyyy-MM-dd hh:mm:ss')}`
-      }
-      if(AppliForm.activityTheme) {
-        params += `&activityTheme=${AppliForm.activityTheme}`;
-      }
-      if(AppliForm.desc) {
-        params += `&desc=${AppliForm.desc}`;
-      }
-      if(AppliForm.createUser) {
-        params += `&createUser=${AppliForm.createUser}`;
-      }
-      // showLoading()
-      // activityList(params).then(res => {
-      //   closeLoading()
-      //   if(res.data.code === 200 && res.data.result) {
-      //     datalist.value = res.data.result.records;
-      //     pages.total = res.data.result.total;
-      //   }
-      // })
-    }
-    onMounted(() => {
-      query()
-    })
+const datalist = ref([]);
+// 查询  表格数据
+const query = () => {
+  let params = `currentPage=${pages.current}&pageSize=${pages.limit}`;
+  if(AppliForm.time[0]) {
+    params += `&activityTimeBegin=${new Date(AppliForm.time[0]).Format('yyyy-MM-dd hh:mm:ss')}`
+    params += `&activityTimeEnd=${new Date(AppliForm.time[1]).Format('yyyy-MM-dd hh:mm:ss')}`
+  }
+  if(AppliForm.activityTheme) {
+    params += `&activityTheme=${AppliForm.activityTheme}`;
+  }
+  if(AppliForm.desc) {
+    params += `&desc=${AppliForm.desc}`;
+  }
+  if(AppliForm.createUser) {
+    params += `&createUser=${AppliForm.createUser}`;
+  }
+  // showLoading()
+  // activityList(params).then(res => {
+  //   closeLoading()
+  //   if(res.data.code === 200 && res.data.result) {
+  //     datalist.value = res.data.result.records;
+  //     pages.total = res.data.result.total;
+  //   }
+  // })
+}
+onMounted(() => {
+  query()
+})
 
-    // 新增/编辑 模态框
-    const addFormRef = ref(null)
-    const addFunc = (info) => {
-      addFormRef.value.onOpen(info)
-    }
+// 新增/编辑 模态框
+const addFormRef = ref(null)
+const addFunc = (info) => {
+  addFormRef.value.onOpen(info)
+}
 
-    // 详情 模态框
-    const detailRef = ref(null)
-    const previewFunc = (info) => {
-      detailRef.value.onOpen(info)
-    }
+// 详情 模态框
+const detailRef = ref(null)
+const previewFunc = (info) => {
+  detailRef.value.onOpen(info)
+}
 
-    // 删除
-    const deleteFunc = (info) => {
-      queryPageFunc(query)
-    }
+// 删除
+const deleteFunc = (info) => {
+  queryPageFunc(query)
+}
 
     return{
       pages,
