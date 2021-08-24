@@ -1,6 +1,8 @@
 <!-- 新增 -->
 <template>
-  <Modal v-model="visible" :title="AppliForm.id ? '编辑' : '新增'" width="700px" class-name="vertical-center-modal" :mask-closable="false" @on-cancel="modalCancel">
+  <Modal v-model="value" :title="AppliForm.id ? '编辑' : '新增'" width="700px" 
+    class-name="vertical-center-modal" :mask-closable="false" 
+    @on-cancel="modalCancel" @on-visible-change="visibleChange">
     <div class="content">
       <Form ref="formRef" class="cdp-form" :rules="ruleValidate" :model="AppliForm" :label-width="90">
         <FormItem label="省份" prop="province">
@@ -24,9 +26,9 @@
   </Modal>
 </template>
 
-<script>
-import { reactive } from "@vue/composition-api"
-import { useModal, useForm, useLoading } from '@/hook/index'
+<script setup>
+import { reactive, watch, defineEmits } from "@vue/composition-api"
+import { useState, useForm } from '@/hook/index'
 import { Message } from 'view-design';
 const ruleValidate = {
   province: [
@@ -51,65 +53,77 @@ const ruleValidate = {
   ]
 }
 
-export default {
-  props: {},
-  components: {},
-  setup(props, { emit }) {
+const props = defineProps({
+  value: {
+    type: Boolean,
+    default: false
+  },
+  editInfo: {
+    type: Object
+  }
+})
+console.log(props)
 
-    const { visible, showModal, closeModal } = useModal() // 模态框
+const emit = defineEmits(['input', 'updateList'])
+// export default {
+//   props: {},
+//   components: {},
+//   setup(props, { emit }) {
+    
     // 表单
-    const form = {
+    const EditForm = {
       id: "",
       province: '河南省',
       activityTheme: "",
       activityTime: "",
       description: ""
     }
-    const {formRef, AppliForm, resetForm, validateForm} = useForm(form)
+    const {formRef, AppliForm, resetForm, validateForm} = useForm(EditForm);
 
-    const { loading, showLoading, closeLoading } = useLoading() // loading控制器
-
-    const modalCancel = () => { // 点击取消
-      resetForm(true);
-      closeModal()
+    const visibleChange = (value) => { // 模态框开关
+      if(value) {
+        let data = props.editInfo;
+        AppliForm.id = data.id ? data.id : "";
+        if(data.id) {
+          AppliForm.province = data.province
+          AppliForm.activityTheme = data.activityTheme
+          AppliForm.activityTime = new Date(data.activityTime)
+          AppliForm.description = data.description
+        }
+      }
     }
 
+    const modalCancel = () => { // 点击取消
+      emit('input', false)
+      resetForm(true);
+    }
+
+    const [ loading, setLoading ] = useState()
     const modalOK = async() => { //点击确定
       let boolean = await validateForm()
       if(!boolean) {
         return Message.error("请填写完整");
       }
-      showLoading();
+      setLoading(true);
       setTimeout(() => {
-        closeLoading();
+        setLoading(false);
         modalCancel()
         emit('updateList')
       }, 1000)
     }
 
-    const onOpen = (data) => {  // 打开模态框执行
-      AppliForm.id = data.id ? data.id : "";
-      if(data.id) {
-        AppliForm.province = data.province
-        AppliForm.activityTheme = data.activityTheme
-        AppliForm.activityTime = new Date(data.activityTime)
-        AppliForm.description = data.description
-      }
-      showModal()
-    }
-
-    return{
-      visible,
-      formRef,
-      ruleValidate,
-      AppliForm,
-      modalCancel,
-      modalOK,
-      loading,
-      onOpen
-    }
-  }
-}
+//     return{
+//       visible,
+//       formRef,
+//       ruleValidate,
+//       AppliForm,
+//       modalCancel,
+//       modalOK,
+//       loading,
+//       onOpen
+//     }
+//   }
+// }
 </script>
 
 <style scoped lang="stylus">

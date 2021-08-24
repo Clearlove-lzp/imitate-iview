@@ -38,6 +38,9 @@ module.exports = {
     externals: {
       './cptable': 'var cptable'
     },
+    plugins: [
+      require('vue2-script-setup-transform/webpack-plugin').default()
+    ]
     // devtool: 'source-map'
   },
   chainWebpack: config => {

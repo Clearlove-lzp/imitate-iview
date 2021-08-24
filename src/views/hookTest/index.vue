@@ -39,28 +39,25 @@
         </Table>
         <div class="cdp-page">
           <Page
-            @on-change="(value) => {queryCurrentFunc(value, query)}" 
+            @on-change="(value) => {queryCurrentFunc(value, query)}"
             :total="pages.total" 
-            :page-size="pages.limit" 
-            :page-size-opts="[10, 20, 50]" 
+            :page-size="pages.limit"
+            :page-size-opts="[10, 20, 50]"
             @on-page-size-change="(value) => {queryLimitFunc(value, query)}"
-            :current="pages.current" 
+            :current="pages.current"
             placement="top"
             show-total show-sizer />
         </div>
       </div>
     </Card>
-    <addForm ref="addFormRef" @updateList="query"></addForm>
-    <detailModal ref="detailRef"></detailModal>
+    <addForm v-model="editVisible" :editInfo="editInfo" @updateList="query"></addForm>
+    <detailModal v-model="detailVisible" :detailInfo="detailInfo"></detailModal>
   </div>
 </template>
 
-<script>
+<script setup>
 import { reactive, onMounted, ref } from "@vue/composition-api"
-import { activityList } from '@/api/index';
-import { usePage, useLoading, useForm } from '@/hook/index.js';
-import moment from 'moment';
-let userInfo = JSON.parse(window.localStorage.getItem('userInfo'))
+import { usePage, useLoading, useForm, useModal } from '@/hook/index.js';
 import addForm from './addForm.vue'
 import detailModal from './detailModal.vue'
 
@@ -103,18 +100,6 @@ const columns = [
     key: "createUserDept"
   },
   {
-    title: "创建时间",
-    width: 150,
-    key: "createTime",
-    render: (h, params) => {
-      return h(
-        "div",
-        {},
-        moment(params.row.createTime).format('YYYY-MM-DD HH:mm:ss')
-      );
-    }
-  },
-  {
     title: "操作",
     key: "action",
     slot: 'action',
@@ -123,23 +108,22 @@ const columns = [
   }
 ]
 
-export default {
-  props: {},
-  components: {
-    addForm,
-    detailModal
-  },
-  setup(props, context) {
+// export default {
+//   props: {},
+//   components: {
+//     addForm,
+//     detailModal
+//   },
+//   setup(props, context) {
 
     // 查询表单
-const form = {
+const queryForm = {
   activityTheme: "",
   time: [],
   desc: "",
   createUser: ""
 }
-const { AppliForm, resetForm } = useForm(form)
-
+const { AppliForm, resetForm } = useForm(queryForm)
 
 const { pages, queryPageFunc, queryCurrentFunc, queryLimitFunc } = usePage(); // 分页器
 
@@ -164,29 +148,23 @@ const query = () => {
   if(AppliForm.createUser) {
     params += `&createUser=${AppliForm.createUser}`;
   }
-  // showLoading()
-  // activityList(params).then(res => {
-  //   closeLoading()
-  //   if(res.data.code === 200 && res.data.result) {
-  //     datalist.value = res.data.result.records;
-  //     pages.total = res.data.result.total;
-  //   }
-  // })
 }
 onMounted(() => {
   query()
 })
 
-// 新增/编辑 模态框
-const addFormRef = ref(null)
+// 打开新增/编辑 模态框
+const [editVisible, setEditVisible, editInfo, setEditInfo] = useModal()
 const addFunc = (info) => {
-  addFormRef.value.onOpen(info)
+  setEditInfo(info)
+  setEditVisible(true)
 }
 
-// 详情 模态框
-const detailRef = ref(null)
+// 打开详情 模态框
+const [detailVisible, setDetailVisible, detailInfo, setDetailInfo] = useModal()
 const previewFunc = (info) => {
-  detailRef.value.onOpen(info)
+  setDetailInfo(info)
+  setDetailVisible(true)
 }
 
 // 删除
@@ -194,25 +172,27 @@ const deleteFunc = (info) => {
   queryPageFunc(query)
 }
 
-    return{
-      pages,
-      queryPageFunc,
-      queryCurrentFunc,
-      queryLimitFunc,
-      query,
-      columns,
-      datalist,
-      loading,
-      AppliForm,
-      resetForm,
-      addFormRef,
-      addFunc,
-      detailRef,
-      previewFunc,
-      deleteFunc
-    }
-  }
-}
+let str = "hah"
+
+//     return{
+//       pages,
+//       queryPageFunc,
+//       queryCurrentFunc,
+//       queryLimitFunc,
+//       query,
+//       columns,
+//       datalist,
+//       loading,
+//       AppliForm,
+//       resetForm,
+//       addFormRef,
+//       addFunc,
+//       detailRef,
+//       previewFunc,
+//       deleteFunc
+//     }
+//   }
+// }
 </script>
 
 <style scoped>

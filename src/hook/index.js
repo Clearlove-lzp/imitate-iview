@@ -50,14 +50,14 @@ import { ref, reactive, onMounted, nextTick, computed,
  }
  
  export const useModal = () => { // 模态框开关
-   const [loading, setLoading] = useState(false);
    const [visible, setVisible] = useState(false);
-   return {
+   const [info, setInfo] = useState(null);
+   return [
      visible,
      setVisible,
-     loading,
-     setLoading
-   }
+     info,
+     setInfo
+   ]
  }
  
  export const usePage = () => { // 分页

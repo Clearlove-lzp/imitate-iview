@@ -1,5 +1,6 @@
 <template>
-  <Modal v-model="visible" title="活动详情" width="900" footer-hide class-name="vertical-center-modal" @on-cancel="modalCancel">
+  <Modal v-model="value" title="活动详情" width="900" footer-hide class-name="vertical-center-modal" 
+    @on-cancel="modalCancel" @on-visible-change="visibleChange">
     <div class="imitate-table" style="margin-bottom: 10px;">
       <table>
         <tr>
@@ -37,40 +38,51 @@
   </Modal>
 </template>
 
-<script>
+<script setup>
 import { ref } from "@vue/composition-api"
-import { useModal } from '@/hook/index'
 
-export default {
-  props: {},
-  components: {},
-  setup(props, { emit }) {
+// export default {
+//   props: {},
+//   components: {},
+//   setup(props, { emit }) {
 
-    const { visible, showModal, closeModal } = useModal() // 模态框
 
+const props = defineProps({
+  value: {
+    type: Boolean,
+    default: false
+  },
+  detailInfo: {
+    type: Object
+  }
+})
+console.log(props)
+    const emit = defineEmits(['input'])
     const AppliForm = ref({})
 
+    const visibleChange = (value) => {
+      if(value) {
+        AppliForm.value = data;
+      }
+    }
+    
     const modalCancel = () => {
+      emit('input', false);
       AppliForm.value = {};
-      closeModal()
     }
 
-    const onOpen = (data) => {
-      AppliForm.value = data;
-      showModal()
-    }
 
-    return{
-      visible,
-      AppliForm,
-      modalCancel,
-      onOpen
-    }
-  }
-}
-
+//     return{
+//       visible,
+//       AppliForm,
+//       modalCancel,
+//       onOpen
+//     }
+//   }
+// }
 
 </script>
+
 <style lang="stylus" scoped>
 /deep/.vertical-center-modal{
   display: flex;
