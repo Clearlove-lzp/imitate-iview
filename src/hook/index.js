@@ -364,8 +364,9 @@ import { ref, reactive, onMounted, nextTick, computed,
  }
  
  export const useUserInfo = () => { // 用户基本信息
-   const userInfo = JSON.parse(window.localStorage.getItem('userInfo'));
-   return {
-     userInfo
-   }
- }
+  const stringUser = window.localStorage.getItem('userInfo')
+  const userInfo = stringUser ? {} : JSON.parse(stringUser);
+  return {
+    userInfo
+  }
+}
