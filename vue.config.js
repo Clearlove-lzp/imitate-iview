@@ -26,6 +26,13 @@ module.exports = {
         changeOrigin: true,
         pathRewrite: {
           '^/api': ''
+        },
+        '/tencent': {
+          target: 'https://apis.map.qq.com',
+          changeOrigin: true,
+          pathRewrite: {
+            '^/tencent': ''
+          },
         }
       },
     },

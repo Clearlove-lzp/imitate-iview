@@ -154,6 +154,22 @@ Vue.use(VueRouter)
     // which is lazy-loaded when the route is visited.
     component: () => import(/* webpackChunkName: "hookTest" */ '../views/hookTest/index.vue')
   },
+  {
+    path: '/baiduMap',
+    name: 'baiduMap',
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "hookTest" */ '../views/baiduMap/map.vue')
+  },
+  {
+    path: '/tencentMap',
+    name: 'tencentMap',
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "hookTest" */ '../views/tencentMap/map.vue')
+  },
 ]
 
 const router = new VueRouter({
