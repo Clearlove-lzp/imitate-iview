@@ -4,7 +4,7 @@
     <Card dis-hover :padding="10">
       <!-- 查询表单 -->
       <div class="cdp-form">
-        <Form :model="AppliForm" label-position="right" :label-width="100">
+        <Form ref="formRef" :model="AppliForm" label-position="right" :label-width="100">
           <Row style="margin-bottom: 10px" :gutter="10">
             <Col span="5">
               <Input v-model="AppliForm.activityTheme" class="cdp-input" placeholder="活动主题"></Input>
@@ -57,7 +57,7 @@
 
 <script setup>
 import { reactive, onMounted, ref } from "@vue/composition-api"
-import { usePage, useLoading, useForm, useModal } from '@/hook/index.js';
+import { usePage, useLoading, useForm, useModal, useState } from '@/hook/index.js';
 import addForm from './addForm.vue'
 import detailModal from './detailModal.vue'
 
@@ -123,7 +123,7 @@ const queryForm = {
   desc: "",
   createUser: ""
 }
-const { AppliForm, resetForm } = useForm(queryForm)
+const [ formRef, AppliForm, resetForm ] = useForm(queryForm)
 
 const { pages, queryPageFunc, queryCurrentFunc, queryLimitFunc } = usePage(); // 分页器
 
@@ -154,17 +154,19 @@ onMounted(() => {
 })
 
 // 打开新增/编辑 模态框
-const [editVisible, setEditVisible, editInfo, setEditInfo] = useModal()
+const [editInfo, setEditInfo] = useState({})
+const [editVisible, openEditModal, closeEditModal] = useModal()
 const addFunc = (info) => {
   setEditInfo(info)
-  setEditVisible(true)
+  openEditModal()
 }
 
 // 打开详情 模态框
-const [detailVisible, setDetailVisible, detailInfo, setDetailInfo] = useModal()
+const [detailInfo, setDetailInfo] = useState({})
+const [detailVisible, openDetailModal, closeDetailModal] = useModal()
 const previewFunc = (info) => {
   setDetailInfo(info)
-  setDetailVisible(true)
+  openDetailModal()
 }
 
 // 删除

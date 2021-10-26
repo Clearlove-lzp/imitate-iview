@@ -21,6 +21,7 @@
       <router-link to="/hookTest">vue3增删改查hook测试</router-link> |
       <router-link to="/baiduMap">百度地图</router-link> |
       <router-link to="/tencentMap">腾讯地图</router-link> |
+      <router-link to="/cropper">图片裁剪</router-link> |
     </div>
     <router-view/>
   </div>

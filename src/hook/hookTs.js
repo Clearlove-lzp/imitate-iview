@@ -50,16 +50,16 @@
 //    }
 //  }
  
-//  export const useModal = () => { // 模态框开关
-//    const [visible, setVisible] = useState(false);
-//    const [info, setInfo] = useState(null);
-//    return [
-//      visible,
-//      setVisible,
-//      info,
-//      setInfo
-//    ]
-//  }
+// export const useModal = () => { // 模态框开关
+//   const [visible, setVisible] = useState(false);
+//   const openModal = () => {
+//     setVisible(true);
+//   }
+//   const closeModal = () => {
+//     setVisible(false);
+//   }
+//   return [visible, openModal, closeModal]
+// }
  
 //  export const usePage = () => { // 分页
 //     interface Pages{
@@ -117,40 +117,41 @@
 //      })
 //    }
  
-//    return {
+//    return [
 //      formRef,
 //      AppliForm,
 //      resetForm,
 //      validateForm
-//    }
+//    ]
 //  }
  
-//  export const useUpload = (url: string) => { // 上传控件
-//    const token: string | null = window.localStorage.getItem("token");
-//    const action: string = url;
-//    const defaultList: any = ref([])
-//    const showUploadBtn: Ref<boolean> = ref(true);
-//    const hideUploadBtn = () => {
-//      showUploadBtn.value = false;
-//    }
-//    const visibleUploadBtn = () => {
-//      showUploadBtn.value = true;
-//    }
-//    return {
-//      token,
-//      action,
-//      defaultList,
-//      showUploadBtn,
-//      hideUploadBtn,
-//      visibleUploadBtn
-//    }
-//  }
- 
+// export const useUpload = (url) => { // 上传控件
+//   const token: string | null = window.localStorage.getItem("token");
+//   const uploadAction: string = url;
+//   const [ defaultList, setDefaultlist ] = useState([])
+//   const showUploadBtn = ref(true);
+//   const hideUploadBtn = () => {
+//     showUploadBtn.value = false;
+//   }
+//   const visibleUploadBtn = () => {
+//     showUploadBtn.value = true;
+//   }
+//   return {
+//     token,
+//     uploadAction,
+//     defaultList,
+//     setDefaultlist,
+//     showUploadBtn,
+//     hideUploadBtn,
+//     visibleUploadBtn
+//   }
+// }
+
 //  export const useTable = (key: string) => { // 表格
 //    const [loading, setLoading] = useState(false)
-//    const datalist: any = ref([])
+//    const [datalist, setDatalist] = useState([])
 //    // 多选
-//    const selectionlist: any = ref([]); // 选择的数据
+//    const [ selectionlist, setSelectionlist] = useState([]); // 选择的数据
 //    const onSelect = (selection: any, row: any) => { // 选中某一项
 //      selectionlist.value.push(row)
 //    }
@@ -180,16 +181,7 @@
 //      })
 //    }
 //    const onSelectionChange = (selection: any[]) => { // 选中项发生变化时
-//      selection.map((x: any) => {
-//        let idx: number = selectionlist.value.findIndex((y: any) => {
-//          return x[key] === y[key]
-//        })
-//        if(idx > -1) {
-//          selectionlist.value.splice(idx, 1)
-//        }else{
-//          selectionlist.value.push(x)
-//        }
-//      })
+//      setSelectionlist(selection)
 //    }
 //    const selectDefault = (arr: any) => { // 默认选中部分
 //      datalist.value.map((x: any, i: number) => {
@@ -217,9 +209,11 @@
 //    }
 //    return {
 //      datalist,
+//      setDatalist,
 //      loading,
 //      setLoading,
 //      selectionlist,
+//      setSelectionlist,
 //      onSelect,
 //      onSelectCancel,
 //      onSelectAll,
@@ -232,16 +226,16 @@
  
 //  export const useEcharts = () => { // echarts
 //    const echartRef: Ref<RefElement | null> = ref(null);
-//    const datalist: any = ref([]);
+//    const [ datalist, setDatalist ] = useState([])
+//    const [ option, setOption ] = useState({})
 //    const myChart: Ref<RefElement | null> = ref(null);
-//    const option: any = ref({});
  
 //    const clearChart = () => {
 //      (myChart.value as RefElement).clear();
 //    }
  
 //    const initChart = () => {
-//      myChart.value = echarts.init(echartRef as RefElement); 
+//      myChart.value = echarts.init(echartRef.value as RefElement);
 //      // 绘制图表
 //      clearChart()
 //      myChart.value.setOption(option.value);
@@ -256,14 +250,16 @@
 //        }
 //      }
 //    })
-//    return {
+//    return [
 //      echartRef,
 //      datalist,
+//      setDatalist,
 //      myChart,
 //      option,
+//      setOption,
 //      initChart,
 //      clearChart
-//    }
+//    ]
 //  }
  
 //  export const useVuex = () => { // vuex
@@ -388,3 +384,8 @@
 //      userInfo
 //    }
 //  }
+
+// import { v4 as uuidv4 } from 'uuid';
+// export const getUId = () => {
+//  return uuidv4().split('-').join('');
+// }

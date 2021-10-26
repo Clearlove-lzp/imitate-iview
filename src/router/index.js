@@ -160,7 +160,7 @@ Vue.use(VueRouter)
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "hookTest" */ '../views/baiduMap/map.vue')
+    component: () => import(/* webpackChunkName: "baiduMap" */ '../views/baiduMap/map.vue')
   },
   {
     path: '/tencentMap',
@@ -168,7 +168,15 @@ Vue.use(VueRouter)
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "hookTest" */ '../views/tencentMap/map.vue')
+    component: () => import(/* webpackChunkName: "tencentMap" */ '../views/tencentMap/map.vue')
+  },
+  {
+    path: '/cropper',
+    name: 'cropper',
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "cropper" */ '../views/cropper.vue')
   },
 ]
 

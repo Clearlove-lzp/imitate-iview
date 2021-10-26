@@ -78,7 +78,7 @@ const emit = defineEmits(['input', 'updateList'])
       activityTime: "",
       description: ""
     }
-    const {formRef, AppliForm, resetForm, validateForm} = useForm(EditForm);
+    const [formRef, AppliForm, resetForm, validateForm] = useForm(EditForm);
 
     const visibleChange = (value) => { // 模态框开关
       if(value) {

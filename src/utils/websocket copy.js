@@ -130,7 +130,7 @@ class websoctekFactory {
     //收到服务器信息，心跳重置
     this.reset();
     //播放声音
-  } 
+  }
 }
 
 export default { websoctekFactory }
