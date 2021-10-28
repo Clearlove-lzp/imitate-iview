@@ -6,17 +6,9 @@ Vue.use(VueRouter)
   const routes = [
   {
     path: '/',
-    redirect: '/about',
-    name: 'About',
-    component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
-  },
-  {
-    path: '/about',
-    name: 'About',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
+    redirect: '/transfer',
+    name: 'Transfer',
+    component: () => import(/* webpackChunkName: "transfer" */ '../views/Transfer.vue')
   },
   {
     path: '/transfer',
@@ -177,6 +169,14 @@ Vue.use(VueRouter)
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
     component: () => import(/* webpackChunkName: "cropper" */ '../views/cropper/index.vue')
+  },
+  {
+    path: '/tree_select_page',
+    name: 'tree_select_page',
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "tree_select_page" */ '../views/treeSelectPage/index.vue')
   },
 ]
 

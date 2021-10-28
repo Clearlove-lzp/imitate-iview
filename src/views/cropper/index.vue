@@ -23,9 +23,11 @@
           </Button>
           <Button type="primary" @click="scale('X')">
             <Icon custom="iconfont icon-shuipingfanzhuan" :size="18"/>
+            左/右
           </Button>
           <Button type="primary" @click="scale('Y')">
             <Icon custom="iconfont icon-chuizhifanzhuan" :size="18"/>
+            上/下
           </Button>
           <Button type="primary" @click="move(0, -moveStep)">
             <Icon type="md-arrow-round-up" :size="18"/>
@@ -96,6 +98,7 @@ export default {
       const reader = new FileReader()
       reader.readAsDataURL(file)
       reader.onload = (event) => {
+        debugger
         this.insideSrc = event.srcElement.result
       }
       return false
@@ -144,7 +147,11 @@ export default {
         preview: `#${this.previewId}`,
         checkCrossOrigin: true
       })
+      setTimeout(() => {
+        this.insideSrc = require("@/assets/miao.png");
+      }, 1000)
     })
+
   }
 }
 </script>
