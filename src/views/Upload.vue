@@ -1,6 +1,6 @@
 <!-- 读取上传文件 -->
 <template>
-  <div>
+  <div class="upload-page">
     <div>
       参考：
       https://www.cnblogs.com/liuxianan/p/js-excel.html
@@ -423,4 +423,7 @@ export default {
 </script>
 
 <style scoped>
+.upload-page{
+  text-align: center;
+}
 </style>

@@ -87,7 +87,6 @@ export default {
   z-index 1000
   width 100%
 .Main
-  text-align center
   padding 20px
   height calc(100vh - 60px)
   position fixed
@@ -116,6 +115,7 @@ export default {
     height 30px
     vertical-align middle
     margin-right 10px
+    border-radius 50%
 
 /*滚动条 start*/
 ::-webkit-scrollbar {
