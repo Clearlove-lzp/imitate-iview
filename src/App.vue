@@ -1,7 +1,8 @@
 <template>
   <div id="app">
     <div id="nav">
-      <Menu mode="horizontal" active-name="/transfer">
+      <Menu mode="horizontal" theme="primary" active-name="/transfer">
+        <div class="logoDiv">Design Studio</div>
         <Submenu name="1">
           <template slot="title">
             <Icon type="ios-stats" />
@@ -41,6 +42,10 @@
           <MenuItem name="/baiduMap" to="/baiduMap">百度地图</MenuItem>
           <MenuItem name="/tencentMap" to="/tencentMap">腾讯地图</MenuItem>
         </Submenu>
+        <div class="userDiv">
+          <img class="headImage" src="@/assets/miao.png" alt="">
+          Lzp
+        </div>
       </Menu>
     </div>
     <div class="Main">
@@ -72,15 +77,103 @@ export default {
   font-family Avenir, Helvetica, Arial, sans-serif
   -webkit-font-smoothing antialiased
   -moz-osx-font-smoothing grayscale
-  text-align center
   color #2c3e50
   margin-top 10px
-
+  font-family "Times New Roman", Times, serif
 #nav
   position fixed
   top: 0
   left: 0
   z-index 1000
+  width 100%
 .Main
-  margin 80px 20px 0
+  text-align center
+  padding 20px
+  height calc(100vh - 60px)
+  position fixed
+  top 60px
+  width 100%
+  overflow auto
+
+.logoDiv
+  width 200px
+  float left
+  text-align center
+  font-size 25px
+  color #fff
+  font-weight bold
+
+.userDiv
+  width 150px
+  float right
+  text-align center
+  font-size 15px
+  color #fff
+  font-weight bold
+  height 100%
+  .headImage
+    width 30px
+    height 30px
+    vertical-align middle
+    margin-right 10px
+
+/*滚动条 start*/
+::-webkit-scrollbar {
+  width: 9px;
+  height: 8px;
+  // background-color: #f5f5f5;
+}
+
+/*定义滚动条轨道 内阴影+圆角*/
+::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.3);
+  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.3);
+  background: #fff;
+  border-radius: 5px;
+}
+
+/*定义滑块 内阴影+圆角*/
+::-webkit-scrollbar-thumb {
+  border-radius: 5px;
+  -webkit-box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.3);
+  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.3);
+  background-color: #008ce6;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  border-radius: 5px;
+  -webkit-box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.3);
+  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.3);
+  background-color: rgba(7, 170, 247, 1);
+}
+
+
+// IE
+::-ms-scrollbar {
+  width: 9px;
+  height: 8px;
+  background-color: #f5f5f5;
+}
+
+/*定义滚动条轨道 内阴影+圆角*/
+::-ms-scrollbar-track {
+  -ms-box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.3);
+  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.3);
+  background: #fff;
+}
+
+/*定义滑块 内阴影+圆角*/
+::-ms-scrollbar-thumb {
+  border-radius: 5px;
+  -ms-box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.3);
+  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.3);
+  background-color: #008ce6;
+}
+
+::-ms-scrollbar-thumb:hover {
+  border-radius: 5px;
+  -ms-box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.3);
+  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.3);
+  background-color: rgba(7, 170, 247, 1);
+}
 </style>
