@@ -1,38 +1,24 @@
 <!-- 树状下拉选择器 -->
 <template>
   <div class="treeSelectPage">
-    <Form ref="treeSelectPage" :model="formItem" :label-width="80" :rules="ruleValidate">
-      <FormItem label="多选" prop="treeSelectedMultiple">
-        <tree-select
-          v-model="formItem.treeSelectedMultiple"
+    <Form ref="treeSelectPage" :model="formItem" :label-width="100" :rules="ruleValidate">
+      <FormItem label="魔改多选" prop="myTreeSelectMultiple">
+        <my-tree-select
+          v-model="formItem.myTreeSelectMultiple"
+          style="width: 400px;"
           multiple
-          style="width: 300px;"
+          show-checkbox
           check-strictly
-          :expand-all="true"
+          check-directly
+          :data="treeData"
           :load-data="loadData"
-          @on-change="handleTreeSelectChange"
+          select-node
+          expand-node
           @on-toggle-expand="handleTreeSelectExpand"
           @on-check-change="handleTreeSelectCheckChange"
           @on-select-change="handleTreeSelectClick"
-          :data="treeData"
-        ></tree-select>
-        <Button @click="changeTreeSelectData">更新选中数据</Button>
-        <Button @click="changeTreeData">更新树数据</Button>
+        ></my-tree-select>
       </FormItem>
-      <!-- <FormItem label="单选" prop="treeSelectedRadio">
-        <tree-select
-          v-model="formItem.treeSelectedRadio"
-          style="width: 300px;"
-          check-strictly
-          :expand-all="true"
-          :load-data="loadData"
-          @on-change="handleTreeSelectChange1"
-          @on-toggle-expand="handleTreeSelectExpand1"
-          @on-check-change="handleTreeSelectCheckChange1"
-          @on-select-change="handleTreeSelectClick1"
-          :data="treeData"
-        ></tree-select>
-      </FormItem> -->
     </Form>
     <div class="checkBtn">
       <Button type="primary" @click="handleSubmit">检查</Button>
@@ -41,34 +27,35 @@
 </template>
 
 <script>
-import TreeSelect from './tree-select';
+import myTreeSelect from './my-tree-select';
 
 export default {
   props: {},
   data () {
     return {
       formItem: {
-        treeSelectedMultiple: [],
-        treeSelectedRadio: ""
+        myTreeSelectMultiple: [],
+        myTreeSelectRadio: ""
       },
       treeData: [
         {
-          id: 1,
+          id: '1',
           title: '1',
+          expand: true,
           children: [
             {
-              id: 11,
+              id: '11',
               title: '1-1',
               loading: false,
               children: [
               ]
             },
             {
-              id: 12,
+              id: '12',
               title: '1-2',
               children: [
                 {
-                  id: 121,
+                  id: '121',
                   title: '1-2-1'
                 }
               ]
@@ -80,13 +67,14 @@ export default {
         {
           id: 'a',
           title: 'a',
+          expand: true,
           children: [
             {
               id: 'a1',
               title: 'a-1',
               children: [
                 {
-                  id: 112,
+                  id: '112',
                   title: '1-1-2'
                 },
                 {
@@ -117,17 +105,17 @@ export default {
         }
       ],
       ruleValidate: {
-        treeSelectedMultiple: [
+        myTreeSelectMultiple: [
           { required: true, type: 'array', min: 1, message: '至少选择一项', trigger: 'change' }
         ],
-        treeSelectedRadio: [
+        myTreeSelectRadio: [
           { required: true, type: 'string', message: '选择一项', trigger: 'change' }
         ]
       }
     };
   },
   components: {
-    TreeSelect
+    myTreeSelect
   },
   computed: {},
   methods: {
@@ -141,53 +129,40 @@ export default {
       })
     },
     changeTreeSelectData () {
-      this.formItem.treeSelectedMultiple = [111, 114]
+      this.formItem.myTreeSelectMultiple = ['111', '114']
     },
     changeTreeData () {
       this.treeData = this.newTreeData
-      // this.formItem.treeSelectedMultiple = [];
     },
     handleTreeSelectChange (list) {
       // console.log('=-========', list);
     },
     handleTreeSelectExpand (item) {
-      // console.log('toggle expand', item);
+      console.log('展开和收起子列表时触发', item);
     },
-    handleTreeSelectCheckChange (selectedArray, item) {
-      // console.log(selectedArray, item);
+    handleTreeSelectCheckChange (selection, item) {
+      console.log('点击复选框时触发', selection, item);
     },
-    handleTreeSelectClick (selectArray, item) {
-      // console.log(selectArray, item);
-    },
-    handleTreeSelectChange1 (list) {
-      // console.log('=-========', list);
-    },
-    handleTreeSelectExpand1 (item) {
-      // console.log('toggle expand', item);
-    },
-    handleTreeSelectCheckChange1 (selectedArray, item) {
-      // console.log(selectedArray, item);
-    },
-    handleTreeSelectClick1 (selectArray, item) {
-      // console.log(selectArray, item);
+    handleTreeSelectClick (selection, item) {
+      console.log('点击树节点时触发', selection, item);
     },
     loadData (item, callback) {
       setTimeout(() => {
         let data = [
           {
-            id: 111,
+            id: '111',
             title: '1-1-1'
           },
           {
-            id: 112,
+            id: '112',
             title: '1-1-2'
           },
           {
-            id: 113,
+            id: '113',
             title: '1-1-3'
           },
           {
-            id: 114,
+            id: '114',
             title: '1-1-4'
           }
         ]

@@ -6,6 +6,7 @@
     v-bind="parent.$attrs"
     :load-data="loadDataCallback"
     show-checkbox
+    multiple
   ></Tree>
 </template>
 
@@ -39,7 +40,7 @@ export default {
       type: Array,
       default: () => []
     },
-    loadData: Function
+    loadData: Function,
   },
   data () {
     return {

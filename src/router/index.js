@@ -171,12 +171,20 @@ Vue.use(VueRouter)
     component: () => import(/* webpackChunkName: "cropper" */ '../views/cropper/index.vue')
   },
   {
-    path: '/tree_select_page',
-    name: 'tree_select_page',
+    path: '/tree_select_page_iview',
+    name: 'tree_select_page_iview',
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "tree_select_page" */ '../views/treeSelectPage/index.vue')
+    component: () => import(/* webpackChunkName: "tree_select_page_iview" */ '../views/treeSelectPage/iview/index.vue')
+  },
+  {
+    path: '/tree_select_page_mySelf',
+    name: 'tree_select_page_mySelf',
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "tree_select_page_mySelf" */ '../views/treeSelectPage/mySelf/index.vue')
   },
 ]
 

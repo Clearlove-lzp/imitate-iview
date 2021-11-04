@@ -4,51 +4,36 @@
     class="tree-select"
     v-bind="$attrs"
     @on-change="handleChange"
-    :multiple="multiple">
-    <tree-select-tree-multiple-item
-      v-if="multiple"
+    multiple>
+    <tree-select-tree-item
       :selectedArray="value"
       :data="data"
       @on-clear="handleClear"
       :load-data="loadData"
       @on-check="handleTreeCheck"
-    ></tree-select-tree-multiple-item>
-    <TreeSelectTreeRadioItem
-      v-else
-      :selectedArray="value"
-      :data="data"
-      @on-clear="handleClear"
-      :load-data="loadData"
-      @on-check="handleTreeCheck"
-    ></TreeSelectTreeRadioItem>
+    ></tree-select-tree-item>
   </Select>
 </template>
 
 <script>
 import Emitter from 'view-design/src/mixins/emitter.js'
-import TreeSelectTreeMultipleItem from './tree-select-tree-multiple.vue'
-import TreeSelectTreeRadioItem from './tree-select-tree-radio.vue'
+import TreeSelectTreeItem from './tree-select-tree.vue'
 export default {
   name: 'TreeSelect',
   mixins: [Emitter],
   components: {
-    TreeSelectTreeMultipleItem,
-    TreeSelectTreeRadioItem
+    TreeSelectTreeItem,
   },
   props: {
     value: {
-      type: [String, Number, Array],
-      default: ''
+      type: Array,
+      default: () => []
     },
     data: {
       type: Array,
       default: () => []
     },
-    multiple: {
-      type: Boolean,
-      default: false
-    },
-    loadData: Function
+    loadData: Function,
   },
   data () {
     return {

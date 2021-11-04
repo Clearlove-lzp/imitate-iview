@@ -18,7 +18,8 @@
           <MenuItem name="/descode" to="/descode">des加密解密</MenuItem>
           <MenuItem name="/hookTest" to="/hookTest">vue3增删改查hook测试</MenuItem>
           <MenuItem name="/cropper" to="/cropper">图片裁剪</MenuItem>
-          <MenuItem name="/tree_select_page" to="/tree_select_page">树状下拉选择器</MenuItem>
+          <MenuItem name="/tree_select_page_iview" to="/tree_select_page_iview">树状下拉选择器--iview</MenuItem>
+          <MenuItem name="/tree_select_page_mySelf" to="/tree_select_page_mySelf">树状下拉选择器--mySelf魔改</MenuItem>
         </Submenu>
         <Submenu name="2">
           <template slot="title">
