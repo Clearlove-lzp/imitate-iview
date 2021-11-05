@@ -6,6 +6,7 @@
     :clearable="clearable" :placeholder="placeholder"
     :maxTagCount="maxTagCount">
     <Tree :data="data"
+      ref="treeChild"
       :multiple="multiple"
       :show-checkbox="showCheckbox"
       :check-strictly="checkStrictly"
@@ -84,9 +85,11 @@ export default {
     },
     onCheckChange(selection, item) {
       this.$emit('on-check-change', selection, item)
+      this.$emit('on-change', selection)
     },
     onSelectChange(selection, item) {
       this.$emit('on-select-change', selection, item)
+      this.$emit('on-change', selection)
     }
   },
   watch: {},

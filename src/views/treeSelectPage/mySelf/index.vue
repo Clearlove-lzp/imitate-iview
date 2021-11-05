@@ -14,6 +14,7 @@
           :load-data="loadData"
           select-node
           expand-node
+          @on-change="onChange"
           @on-toggle-expand="handleTreeSelectExpand"
           @on-check-change="handleTreeSelectCheckChange"
           @on-select-change="handleTreeSelectClick"
@@ -119,6 +120,9 @@ export default {
   },
   computed: {},
   methods: {
+    changes(value) {
+      console.log(value)
+    },
     handleSubmit () {
       this.$refs.treeSelectPage.validate((valid) => {
         if (valid) {
@@ -136,6 +140,9 @@ export default {
     },
     handleTreeSelectChange (list) {
       // console.log('=-========', list);
+    },
+    onChange(value) {
+      console.log('on-change', value)
     },
     handleTreeSelectExpand (item) {
       console.log('展开和收起子列表时触发', item);
