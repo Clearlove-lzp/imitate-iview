@@ -20,6 +20,7 @@
           <MenuItem name="/cropper" to="/cropper">图片裁剪</MenuItem>
           <MenuItem name="/tree_select_page_iview" to="/tree_select_page_iview">树状下拉选择器--iview</MenuItem>
           <MenuItem name="/tree_select_page_mySelf" to="/tree_select_page_mySelf">树状下拉选择器--mySelf魔改</MenuItem>
+          <MenuItem name="/previewDoc" to="/previewDoc">word,excel,ppt,pdf在线预览</MenuItem>
         </Submenu>
         <Submenu name="2">
           <template slot="title">

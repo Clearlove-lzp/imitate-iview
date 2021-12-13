@@ -186,6 +186,15 @@ Vue.use(VueRouter)
     // which is lazy-loaded when the route is visited.
     component: () => import(/* webpackChunkName: "tree_select_page_mySelf" */ '../views/treeSelectPage/mySelf/index.vue')
   },
+  {
+    path: '/previewDoc',
+    name: 'previewDoc',
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "previewDoc" */ '../views/previewDoc/index.vue')
+  },
+  
 ]
 
 const router = new VueRouter({
