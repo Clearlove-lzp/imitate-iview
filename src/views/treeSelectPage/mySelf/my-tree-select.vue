@@ -2,98 +2,88 @@
 <template>
   <Select
     ref="treeSelect" class="tree-select"
-    :multiple="multiple" :disabled="disabled"
-    :clearable="clearable" :placeholder="placeholder"
-    :maxTagCount="maxTagCount">
-    <Tree :data="data"
-      ref="treeChild"
-      :multiple="multiple"
-      :show-checkbox="showCheckbox"
-      :check-strictly="checkStrictly"
-      :check-directly="checkDirectly"
+    :multiple="multiple"
+    v-bind="$attrs"
+    @on-change="handleChange">
+    <treeSelectTreeMultiple
+      v-if="multiple"
+      :data="data"
+      :selectedArray="value"
       :load-data="loadData"
-      :select-node="selectNode"
-      :expand-node="expandNode"
-      @on-toggle-expand="onToggleExpand"
-      @on-check-change="onCheckChange"
-      @on-select-change="onSelectChange"
-    ></Tree>
+      @on-check="onCheckChange"
+      @on-clear="onClear"
+    ></treeSelectTreeMultiple>
+    <treeSelectTreeRadio
+      v-else
+      :data="data"
+      :selectedId="value"
+      :load-data="loadData"
+      @on-check="onCheckChange"
+      @on-clear="onClear"
+    ></treeSelectTreeRadio>
   </Select>
 </template>
 
 <script>
+import Emitter from 'view-design/src/mixins/emitter.js'
+import treeSelectTreeMultiple from './tree-select-tree-multiple';
+import treeSelectTreeRadio from './tree-select-tree-radio';
+
 export default {
   props: {
     value: {
-      type: [String, Array],
-      default: false
+      type: [String, Array, Number],
+      default: ""
     },
     multiple: {
       type: Boolean,
       default: false
     },
-    disabled: {
-      type: Boolean,
-      default: false
-    },
-    clearable: {
-      type: Boolean,
-      default: false
-    },
-    placeholder: {
-      type: String,
-      default: ""
-    },
-    maxTagCount: {
-      type: Number
-    },
     data: {
       type: Array,
       default: () => []
     },
-    showCheckbox: {
-      type: Boolean,
-      default: false
-    },
-    checkStrictly: {
-      type: Boolean,
-      default: false
-    },
     loadData: Function,
-    checkDirectly: {
-      type: Boolean,
-      default: false
-    },
-    selectNode: {
-      type: Boolean,
-      default: false
-    },
-    expandNode: {
-      type: Boolean,
-      default: false
-    }
   },
+  mixins: [Emitter],
   data () {
     return {
+      isChangedByTree: true,
     };
   },
-  components: {},
-  computed: {},
-  methods: {
-    onToggleExpand(item) {
-      this.$emit('on-toggle-expand', item)
-    },
-    onCheckChange(selection, item) {
-      this.$emit('on-check-change', selection, item)
-      this.$emit('on-change', selection)
-    },
-    onSelectChange(selection, item) {
-      this.$emit('on-select-change', selection, item)
-      this.$emit('on-change', selection)
+  provide () {
+    return {
+      parent: this
     }
   },
-  watch: {},
-  mounted() {},
+  components: {
+    treeSelectTreeMultiple,
+    treeSelectTreeRadio
+  },
+  computed: {},
+  methods: {
+    handleChange (selection) {
+      if (!this.isChangedByTree) {
+        this.$emit('input', selection);
+      }
+      this.isChangedByTree = false
+    },
+    onCheckChange(selection) {
+      this.isChangedByTree = true
+      if(this.multiple) {
+        this.$emit('input', selection.map(x => x.id));
+      }else{
+        this.$emit('input', selection.length ? selection[0].id : "");
+      }
+    },
+    onClear () {
+      this.$refs.treeSelect.reset()
+    }
+  },
+  watch: {
+  },
+  mounted() {
+  },
   created() {},
 }
 </script>

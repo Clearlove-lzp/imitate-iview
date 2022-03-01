@@ -1,4 +1,4 @@
-// const path = require('path');
+const path = require('path');
 
 module.exports = {
   publicPath: './', // 部署应用包时的基本 URL。这个值也可以被设置为空字符串 ('') 或是相对路径 ('./')，这样所有的资源都会被链接为相对路径，这样打出来的包可以被部署在任意路径，
@@ -27,14 +27,14 @@ module.exports = {
         pathRewrite: {
           '^/api': ''
         },
-        '/tencent': {
-          target: 'https://apis.map.qq.com',
-          changeOrigin: true,
-          pathRewrite: {
-            '^/tencent': ''
-          },
-        }
       },
+      '/tencent': {
+        target: 'https://apis.map.qq.com',
+        changeOrigin: true,
+        pathRewrite: {
+          '^/tencent': ''
+        },
+      }
     },
     overlay: {// 错误或者警告出现在浏览器上?
       warnings: false,
@@ -52,9 +52,9 @@ module.exports = {
   },
   chainWebpack: config => {
     config.optimization.minimize(true);
-    // config.resolve.alias
-    //   .set('@', path.resolve('src'))
-    //   .set('@assets', path.resolve('src/assets'))
+    config.resolve.alias
+      .set('@', path.resolve('src'))
+      .set('@assets', path.resolve('src/assets'))
   }
   // chainWebpack  // 是一个函数，会接收一个基于 webpack-chain 的 ChainableConfig 实例。允许对内部的 webpack 配置进行更细粒度的修改。
 }

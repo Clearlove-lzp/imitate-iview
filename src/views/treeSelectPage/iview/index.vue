@@ -132,7 +132,7 @@ export default {
       // console.log('=-========', list);
     },
     handleTreeSelectExpand (item) {
-      // console.log('toggle expand', item);
+      console.log('展开和收起子列表时触发', item);
     },
     handleTreeSelectCheckChange (selectedArray, item) {
       // console.log(selectedArray, item);
@@ -165,7 +165,11 @@ export default {
     }
   },
   watch: {},
-  mounted() {},
+  mounted() {
+    setTimeout(() => {
+      this.formItem.treeSelectedMultiple = ["11"]
+    }, 2000)
+  },
   created() {},
 }
 </script>

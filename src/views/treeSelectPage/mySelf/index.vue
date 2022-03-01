@@ -2,27 +2,44 @@
 <template>
   <div class="treeSelectPage">
     <Form ref="treeSelectPage" :model="formItem" :label-width="100" :rules="ruleValidate">
-      <FormItem label="魔改多选" prop="myTreeSelectMultiple">
+      <!-- <FormItem label="魔改多选" prop="myTreeSelectMultiple">
         <my-tree-select
           v-model="formItem.myTreeSelectMultiple"
           style="width: 400px;"
           multiple
-          show-checkbox
           check-strictly
           check-directly
           :data="treeData"
           :load-data="loadData"
+          :expand-all="true"
+          value-consists-of="LEAF_PRIORIT"
           select-node
           expand-node
-          @on-change="onChange"
+          @on-change="handleTreeSelectChange"
           @on-toggle-expand="handleTreeSelectExpand"
           @on-check-change="handleTreeSelectCheckChange"
+          @on-select-change="handleTreeSelectClick"
+        ></my-tree-select>
+      </FormItem> -->
+      <FormItem label="魔改单选" prop="myTreeSelectRadio">
+        <my-tree-select
+          v-model="formItem.myTreeSelectRadio"
+          style="width: 400px;"
+          :data="treeData"
+          :load-data="loadData"
+          :expand-all="true"
+          value-consists-of="LEAF_PRIORIT"
+          select-node
+          clearable
+          @on-change="handleTreeSelectChange"
+          @on-toggle-expand="handleTreeSelectExpand"
           @on-select-change="handleTreeSelectClick"
         ></my-tree-select>
       </FormItem>
     </Form>
     <div class="checkBtn">
-      <Button type="primary" @click="handleSubmit">检查</Button>
+      <Button type="primary" @click="handleSubmit" style="margin-right: 10px">检查</Button>
+      <Button type="primary" @click="handleReset">重置</Button>
     </div>
   </div>
 </template>
@@ -123,6 +140,9 @@ export default {
     changes(value) {
       console.log(value)
     },
+    handleReset() {
+      this.$refs.treeSelectPage.resetFields()
+    },
     handleSubmit () {
       this.$refs.treeSelectPage.validate((valid) => {
         if (valid) {
@@ -132,26 +152,17 @@ export default {
         }
       })
     },
-    changeTreeSelectData () {
-      this.formItem.myTreeSelectMultiple = ['111', '114']
-    },
-    changeTreeData () {
-      this.treeData = this.newTreeData
-    },
-    handleTreeSelectChange (list) {
-      // console.log('=-========', list);
-    },
-    onChange(value) {
+    handleTreeSelectChange(value) {
       console.log('on-change', value)
     },
     handleTreeSelectExpand (item) {
-      console.log('展开和收起子列表时触发', item);
+      // console.log('展开和收起子列表时触发', item);
     },
     handleTreeSelectCheckChange (selection, item) {
-      console.log('点击复选框时触发', selection, item);
+      // console.log('点击复选框时触发', selection, item);
     },
     handleTreeSelectClick (selection, item) {
-      console.log('点击树节点时触发', selection, item);
+      // console.log('点击树节点时触发', selection, item);
     },
     loadData (item, callback) {
       setTimeout(() => {
@@ -178,7 +189,11 @@ export default {
     }
   },
   watch: {},
-  mounted() {},
+  mounted() {
+    setTimeout(() => {
+      this.formItem.myTreeSelectMultiple = ["11", "12"]
+    }, 2000)
+  },
   created() {},
 }
 </script>
