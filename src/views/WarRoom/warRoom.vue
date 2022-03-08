@@ -110,6 +110,9 @@ export default {
 </script>
 
 <style scoped lang="stylus">
+:root {
+  --message-text: #ccc;
+}
 .warRoom{
   width: 100%;
   height: calc(100vh - 60px);

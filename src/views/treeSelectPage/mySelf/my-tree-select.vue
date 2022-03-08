@@ -1,7 +1,7 @@
 <!-- treeselect 组件 封装 -->
 <template>
   <Select
-    ref="treeSelect" class="tree-select"
+    :ref="`treeSelect-${_uid}`" class="tree-select"
     :multiple="multiple"
     v-bind="$attrs"
     @on-change="handleChange">
@@ -77,12 +77,13 @@ export default {
       }
     },
     onClear () {
-      this.$refs.treeSelect.reset()
+      this.$refs[`treeSelect-${this._uid}`].reset()
     }
   },
   watch: {
   },
   mounted() {
+    console.log(this)
   },
   created() {},
 }

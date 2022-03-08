@@ -26,7 +26,7 @@ const arrayEqual = (arr1, arr2) => {
 }
 
 export default {
-  name: 'TreeSelectTree',
+  name: 'TreeSelectTreeRadio',
   mixins: [Emitter],
   props: {
     data: {

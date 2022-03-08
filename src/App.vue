@@ -21,6 +21,7 @@
           <MenuItem name="/tree_select_page_iview" to="/tree_select_page_iview">树状下拉选择器--iview</MenuItem>
           <MenuItem name="/tree_select_page_mySelf" to="/tree_select_page_mySelf">树状下拉选择器--mySelf魔改</MenuItem>
           <MenuItem name="/previewDoc" to="/previewDoc">word,excel,ppt,pdf在线预览</MenuItem>
+          <MenuItem name="/count_to_number" to="/count_to_number">数字渐变</MenuItem>
         </Submenu>
         <Submenu name="2">
           <template slot="title">

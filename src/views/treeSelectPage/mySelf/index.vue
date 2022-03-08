@@ -2,7 +2,7 @@
 <template>
   <div class="treeSelectPage">
     <Form ref="treeSelectPage" :model="formItem" :label-width="100" :rules="ruleValidate">
-      <!-- <FormItem label="魔改多选" prop="myTreeSelectMultiple">
+      <FormItem label="魔改多选" prop="myTreeSelectMultiple">
         <my-tree-select
           v-model="formItem.myTreeSelectMultiple"
           style="width: 400px;"
@@ -12,6 +12,7 @@
           :data="treeData"
           :load-data="loadData"
           :expand-all="true"
+          :max-tag-count="3"
           value-consists-of="LEAF_PRIORIT"
           select-node
           expand-node
@@ -20,8 +21,8 @@
           @on-check-change="handleTreeSelectCheckChange"
           @on-select-change="handleTreeSelectClick"
         ></my-tree-select>
-      </FormItem> -->
-      <FormItem label="魔改单选" prop="myTreeSelectRadio">
+      </FormItem>
+      <!-- <FormItem label="魔改单选" prop="myTreeSelectRadio">
         <my-tree-select
           v-model="formItem.myTreeSelectRadio"
           style="width: 400px;"
@@ -34,7 +35,7 @@
           @on-change="handleTreeSelectChange"
           @on-toggle-expand="handleTreeSelectExpand"
           @on-select-change="handleTreeSelectClick"
-        ></my-tree-select>
+        ></my-tree-select> -->
       </FormItem>
     </Form>
     <div class="checkBtn">

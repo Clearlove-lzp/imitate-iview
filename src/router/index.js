@@ -194,7 +194,14 @@ Vue.use(VueRouter)
     // which is lazy-loaded when the route is visited.
     component: () => import(/* webpackChunkName: "previewDoc" */ '../views/previewDoc/index.vue')
   },
-  
+  {
+    path: '/count_to_number',
+    name: 'count_to_number',
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "count_to_page" */ '../views/count-to-number/index.vue')
+  },
 ]
 
 const router = new VueRouter({
