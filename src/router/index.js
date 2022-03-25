@@ -202,6 +202,30 @@ Vue.use(VueRouter)
     // which is lazy-loaded when the route is visited.
     component: () => import(/* webpackChunkName: "count_to_page" */ '../views/count-to-number/index.vue')
   },
+  {
+    path: '/org_tree',
+    name: 'org_tree',
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "org_tree" */ '../views/org-tree/index.vue')
+  },
+  {
+    path: '/directivePage',
+    name: 'directivePage',
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "directivePage" */ '../views/directivePage/index.vue')
+  },
+  {
+    path: '/vueQuillEditor',
+    name: 'vueQuillEditor',
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "vueQuillEditor" */ '../views/vueQuillEditor/index.vue')
+  },
 ]
 
 const router = new VueRouter({

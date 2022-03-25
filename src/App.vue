@@ -22,6 +22,9 @@
           <MenuItem name="/tree_select_page_mySelf" to="/tree_select_page_mySelf">树状下拉选择器--mySelf魔改</MenuItem>
           <MenuItem name="/previewDoc" to="/previewDoc">word,excel,ppt,pdf在线预览</MenuItem>
           <MenuItem name="/count_to_number" to="/count_to_number">数字渐变</MenuItem>
+          <MenuItem name="/org_tree" to="/org_tree">组织结构树</MenuItem>
+          <MenuItem name="/directivePage" to="/directivePage">指令</MenuItem>
+          <MenuItem name="/vueQuillEditor" to="/vueQuillEditor">vue-quill-editor</MenuItem>
         </Submenu>
         <Submenu name="2">
           <template slot="title">
