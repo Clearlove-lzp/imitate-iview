@@ -13,6 +13,7 @@ import {
 } from "@vue/composition-api";
 import _ from "lodash";
 import echarts from "echarts";
+import { Message } from "view-design";
 
 // 使用es6解构，可任意设置变量
 export const useState = (value) => {
@@ -134,6 +135,7 @@ export const useForm = (form) => {
 
 export const useUpload = (url) => {
   // 上传控件
+  const uploadRef = ref(null);
   const token = window.localStorage.getItem("token");
   const uploadAction = url;
   const [defaultList, setDefaultlist] = useState([]);
@@ -144,7 +146,48 @@ export const useUpload = (url) => {
   const visibleUploadBtn = () => {
     showUploadBtn.value = true;
   };
+  const handleSucFunc = (res, file, fileList) => {
+    // 上传成功
+    if (res.code === 200) {
+      defaultList.value.push({
+        name: file.name,
+        url: uploadAction,
+        fileId: res.result.fileId,
+      });
+      Message.success(res.message);
+    } else {
+      defaultList.value = fileList.filter((x) => {
+        return x.uid !== file.uid;
+      });
+      Message.error(res.message);
+    }
+  };
+  const handleErrFunc = (error, file, fileList) => {
+    // 上传失败
+    Message.error("上传失败");
+  };
+  const handleRemove = (file, fileList) => {
+    // 移除
+    defaultList.value = fileList;
+  };
+  const handleFormatError = (file, fileList) => {
+    // 格式验证错误
+    uploadRef.value &&
+      Message.warning(
+        `仅可上传格式为${uploadRef.value.format.join("、")}的文件`
+      );
+  };
+  const handleMaxSize = (file, fileList) => {
+    // 超出文件限制大小
+    uploadRef.value &&
+      Message.warning(`文件大小不可以超过${uploadRef.value.maxSize / 1024}M`);
+  };
+  const clearFiles = () => {
+    // 清除文件
+    uploadRef.value.clearFiles();
+  };
   return {
+    uploadRef,
     token,
     uploadAction,
     defaultList,
@@ -152,6 +195,12 @@ export const useUpload = (url) => {
     showUploadBtn,
     hideUploadBtn,
     visibleUploadBtn,
+    handleSucFunc,
+    handleErrFunc,
+    handleRemove,
+    handleFormatError,
+    handleMaxSize,
+    clearFiles,
   };
 };
 
