@@ -28,11 +28,11 @@
     <Button @click="test2">提交</Button>
 
     <!-- 测试三 -->
-    <Divider>测试三: iview + excel (xlsx)上传（多个文件）</Divider>
+    <Divider>测试三: iview + excel上传（多个文件）</Divider>
     <Upload
         multiple
         type="drag"
-        accept=".xlsx"
+        accept=".xlsx,.xls"
         :default-file-list="defaultList3"
         :before-upload="handleUpload3"
         :on-remove="removeHandler3"
@@ -47,11 +47,11 @@
     <div id="result"></div>
 
     <!-- 测试四 -->
-    <Divider>测试四: iview + excel (xlsx)上传（多个文件）+ 合并成一个excel</Divider>
+    <Divider>测试四: iview + excel上传（多个文件）+ 合并成一个excel</Divider>
     <Upload
         multiple
         type="drag"
-        accept=".xlsx"
+        accept=".xlsx,.xls"
         :default-file-list="defaultList4"
         :before-upload="handleUpload4"
         :on-remove="removeHandler4"
@@ -62,7 +62,22 @@
         </div>
     </Upload>
     <Button @click="download4">导出一个excel</Button>
-    <div id="result"></div>
+
+    <!-- 测试五 -->
+    <Divider>测试五: iview + excel上传 + 生成iview-table</Divider>
+    <Upload
+        type="drag"
+        accept=".xlsx,.xls"
+        :default-file-list="defaultList5"
+        :before-upload="handleUpload5"
+        :on-remove="removeHandler5"
+        action="/">
+        <div style="padding: 20px 0">
+            <Icon type="ios-cloud-upload" size="52" style="color: #3399ff"></Icon>
+            <p>点击或者拖拽上传</p>
+        </div>
+    </Upload>
+    <Button @click="test5">生成</Button>
   </div>
 </template>
 
@@ -75,10 +90,13 @@ export default {
       defaultList: [],
       defaultList3: [],
       defaultList4: [],
+      defaultList5: [],
       sheetInfo: {
         SheetNames: [],
         Sheets: {}
-      }
+      },
+      tableData: [],
+      tableTitle: [],
     };
   },
   components: {},
@@ -120,7 +138,7 @@ export default {
     },
     // 上传文件前
     handleUpload3(response) {
-      if(!/\.xlsx$/g.test(response.name)) {
+      if(!/[\.xlsx|\.xls]$/g.test(response.name)) {
 				alert('仅支持读取xlsx格式！');
 				return;
 			}
@@ -133,16 +151,29 @@ export default {
     },
     // 上传文件前
     handleUpload4(response) {
-      if(!/\.xlsx$/g.test(response.name)) {
+      if(!/[\.xlsx|.xls]$/g.test(response.name)) {
 				alert('仅支持读取xlsx格式！');
 				return;
 			}
       this.defaultList4.push(response);
       return false;
     },
+    // 上传文件前
+    handleUpload5(response) {
+      if(!/[\.xlsx|.xls]$/g.test(response.name)) {
+				alert('仅支持读取xlsx格式！');
+				return;
+			}
+      this.defaultList5.push(response);
+      return false;
+    },
     // 移除文件
     removeHandler4(file, fileList) {
       this.defaultList4 = fileList;
+    },
+    // 移除文件
+    removeHandler5(file, fileList) {
+      this.defaultList5 = fileList;
     },
     // 测试二提交
     test2() {
@@ -190,6 +221,54 @@ export default {
           })
         })
       }
+    },
+    // 测试5提交
+    test5() {
+      if(!this.defaultList5.length) {
+        return alert("不能空")
+      }
+      console.log(this.defaultList5); // 文件字节数
+      let files = this.defaultList5;//获取到文件列表
+      if(files.length == 0) {
+        alert('请选择文件');
+      }else {
+        files.map((x, i) => {
+          const reader = new FileReader()
+          reader.readAsArrayBuffer(x)
+          reader.onload = e => {
+            this.$Message.info('文件读取成功')
+            const data = e.target.result
+            const { header, results } = this.excelRead(data, 'array')
+            const tableTitle = header.map(item => { return { title: item, key: item } })
+            this.tableData = results
+            this.tableTitle = tableTitle
+          }
+        })
+      }
+    },
+    excelRead(data, type) {
+      /* if type == 'base64' must fix data first */
+      // const fixedData = fixdata(data)
+      // const workbook = XLSX.read(btoa(fixedData), { type: 'base64' })
+      const workbook = XLSX.read(data, { type: type });
+      const firstSheetName = workbook.SheetNames[0];
+      const worksheet = workbook.Sheets[firstSheetName];
+      const header = this.get_header_row(worksheet);
+      const results = XLSX.utils.sheet_to_json(worksheet);
+      return {header, results};
+    },
+    get_header_row(sheet) {
+      const headers = []
+      const range = XLSX.utils.decode_range(sheet['!ref'])
+      let C
+      const R = range.s.r /* start in the first row */
+      for (C = range.s.c; C <= range.e.c; ++C) { /* walk every column in the range */
+        var cell = sheet[XLSX.utils.encode_cell({ c: C, r: R })] /* find the cell in the first row */
+        var hdr = 'UNKNOWN ' + C // <-- replace with your desired default
+        if (cell && cell.t) hdr = XLSX.utils.format_cell(cell)
+        headers.push(hdr)
+      }
+      return headers
     },
     // 测试三导出
     download3() {
