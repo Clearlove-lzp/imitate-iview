@@ -327,7 +327,6 @@ export default {
         //   console.log(`第${i+1}个文件；   ${e.target.result}`)
         // }
         await this.readWorkbookFromLocalFile_test4(files[i]).then((workbook) => {
-          debugger
           let sheetNames = workbook.SheetNames; // 工作表名称集合
           for(let j = 0; j < sheetNames.length; j ++) {
             this.sheetInfo.SheetNames.push(sheetNames[j]);
