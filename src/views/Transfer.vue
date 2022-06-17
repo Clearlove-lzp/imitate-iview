@@ -4,71 +4,57 @@
     <Input search enter-button v-model="queryName" style="width: 350px" @on-search="queryNameHandler" placeholder="名称" />
     <Card style="margin-top: 10px">
       <Row>
-        <Col span="8">
-          <div style="width:95%;max-height: 340px;overflow-y: auto">
-            <Tree @on-select-change="selectItem" :data="data2" style="height: 340px"></Tree>
+      <Col span="11">
+        <div class="box-container left-box">
+          <div class="top-info">
+            <div>
+              <Checkbox v-model="willCheckAll" :disabled="data1.length < 1" @on-change="handleWillCheckAll">待选择</Checkbox>
+            </div>
+            <div>
+              <span v-show="willCheckList.length > 0">{{willCheckList.length}}/</span>
+              <span>{{willData.length}}</span>
+            </div>
           </div>
-        </Col>
-        <Col span="16">
-          <Row>
-            <Col span="11">
-              <div class="box-container left-box">
-                <div class="top-info">
-                  <div>
-                    <Checkbox v-model="willCheckAll" :disabled="data1.length < 1" @on-change="handleWillCheckAll">待选择</Checkbox>
-                  </div>
-                  <div>
-                    <span v-show="willCheckList.length > 0">{{willCheckList.length}}/</span>
-                    <span>{{willData.length}}</span>
-                  </div>
-                </div>
-                <ul class="childName">
-                  <CheckboxGroup v-model="willCheckList" @on-change="checkWillAllGroupChange">
-                    <li class="child-item" v-for="(item, index) in willData" :key="index" @dblclick.stop="dblToRight(item.key)">
-                      <Checkbox :label="item.key">{{item.label}}</Checkbox>
-                    </li>
-                  </CheckboxGroup>
-                </ul>
-              </div>
-            </Col>
-            <Col span="2" class="col2">
-              <div class="arrow-box">
-                <Button type="primary" class="arrow" icon="ios-arrow-back" :disabled="hasCheckList.length < 1" @click="toLeft"></Button>
-                <Button type="primary" class="arrow" icon="ios-arrow-forward" :disabled="willCheckList.length < 1" @click="toRight"></Button>
-              </div>
-            </Col>
-            <Col span="11">
-              <div class="box-container right-box">
-                <div class="top-info">
-                  <div>
-                    <Checkbox v-model="hasCheckAll" @on-change="handleHasCheckAll">已选择</Checkbox>
-                  </div>
-                  <div>
-                    <span v-show="hasCheckList.length > 0">{{hasCheckList.length}}/</span>
-                    <span>{{targetKeys.length}}</span>
-                  </div>
-                </div>
-                <ul class="childName">
-                  <CheckboxGroup v-model="hasCheckList" @on-change="checkHasAllGroupChange">
-                    <li class="child-item" v-for="(item, index) in hasData" :key="index" @dblclick.stop="dblToLeft(item.key)">
-                      <Checkbox :label="item.key">{{item.label}}</Checkbox>
-                    </li>
-                  </CheckboxGroup>
-                </ul>
-              </div>
-            </Col>
-          </Row>
-          <!-- <Transfer
-            :data="data1"
-            :titles="titlesList"
-            :list-style="listStyle"
-            :target-keys="targetKeys"
-            :render-format="render1"
-            @on-change="handleChange1"
-          ></Transfer> -->
-          <Spin fix v-if="showLoading">加载中...</Spin>
-        </Col>
-      </Row>
+          <ul class="childName">
+            <CheckboxGroup v-model="willCheckList" @on-change="checkWillAllGroupChange">
+              <li class="child-item" v-for="item in willData" :key="item.key" @dblclick.stop="dblToRight(item.key)">
+                <Checkbox :label="item.key" @click.stop.native="()=>{}">{{item.title}}</Checkbox>
+              </li>
+            </CheckboxGroup>
+          </ul>
+        </div>
+      </Col>
+      <Col span="2" class="col2">
+        <div class="arrow-box">
+          <Button type="primary" class="arrow rotateArrow" icon="ios-skip-backward" :disabled="hasCheckList.length < 1" @click="toTop"></Button>
+          <Button type="primary" class="arrow" icon="ios-arrow-up" :disabled="hasCheckList.length !== 1" @click="toUp"></Button>
+          <Button type="primary" class="arrow" icon="ios-arrow-back" :disabled="hasCheckList.length < 1" @click="toLeft"></Button>
+          <Button type="primary" class="arrow" icon="ios-arrow-forward" :disabled="willCheckList.length < 1" @click="toRight"></Button>
+          <Button type="primary" class="arrow" icon="ios-arrow-down" :disabled="hasCheckList.length !== 1" @click="toDown"></Button>
+          <Button type="primary" class="arrow rotateArrow" icon="ios-skip-forward" :disabled="hasCheckList.length < 1" @click="toBottom"></Button>
+        </div>
+      </Col>
+      <Col span="11">
+        <div class="box-container right-box">
+          <div class="top-info">
+            <div>
+              <Checkbox v-model="hasCheckAll" @on-change="handleHasCheckAll">已选择</Checkbox>
+            </div>
+            <div>
+              <span v-show="hasCheckList.length > 0">{{hasCheckList.length}}/</span>
+              <span>{{targetKeys.length}}</span>
+            </div>
+          </div>
+          <ul class="childName">
+            <CheckboxGroup v-model="hasCheckList" @on-change="checkHasAllGroupChange">
+              <li class="child-item" v-for="item in hasData" :key="item.key" @dblclick.stop="dblToLeft(item.key)">
+                <Checkbox :label="item.key" @click.stop.native="()=>{}">{{item.title}}</Checkbox>
+              </li>
+            </CheckboxGroup>
+          </ul>
+        </div>
+      </Col>
+    </Row>
     </Card>
   </div>
 </template>
@@ -80,18 +66,61 @@ export default {
   data () {
     return {
       queryName: "",
-      data2: [],
-      showLoading: false,
-      show: {
-        type: "JOINT"
-      },
       willCheckAll: false,
       willCheckList: [],
       hasCheckAll: false,
       hasCheckList: [],
-      leftArray: [],
       targetKeys: [],
-      data1: []
+      data1: [
+        {
+          title: "省份",
+          key: "province",
+          tooltip: true,
+          width: 80,
+        },
+        {
+          title: "地市",
+          key: "city",
+          tooltip: true,
+          width: 90,
+        },
+        {
+          title: "活动主题",
+          key: "activityTheme",
+          tooltip: true,
+        },
+        {
+          title: "活动时间",
+          width: 150,
+          key: "activityTime",
+        },
+        {
+          title: "活动描述",
+          key: "description",
+          tooltip: true
+        },
+        {
+          title: "填报人",
+          width: 90,
+          key: "createUser"
+        },
+        {
+          title: "填报人部门",
+          width: 120,
+          key: "createUserDept"
+        },
+        {
+          title: "创建时间",
+          width: 150,
+          key: "createTime",
+        },
+        {
+          title: "操作",
+          key: "action",
+          width: 200,
+          align: "center",
+        }
+      ]
     };
   },
   components: {},
@@ -107,12 +136,20 @@ export default {
     },
     hasData() {
       let arr = []
-      this.data1.forEach(item => {
-        if(this.targetKeys.includes(item.key)) {
-          arr.push(item)
-        }
+      this.targetKeys.map(item => {
+        this.data1.map(item1 => {
+          if(item === item1.key) {
+            arr.push(item1)
+          }
+        })
       })
       return arr
+      // this.data1.forEach(item => {
+      //   if(this.targetKeys.includes(item.key)) {
+      //     arr.push(item)
+      //   }
+      // })
+      // return arr
     }
   },
   methods: {
@@ -124,19 +161,6 @@ export default {
       let param = {
         userName: this.queryName
       }
-    },
-    //树节点选择
-    selectItem(item) {
-      let param = {};
-      if (item.length > 0) {
-        param = {
-          orgId: item[0].id
-        }
-      }
-    },
-    unique(arr) {
-      const res = new Map();
-      return arr.filter(arr => !res.has(arr) && res.set(arr, 1));
     },
     checkWillAllGroupChange(data) {
       if(data.length === this.willData.length) {
@@ -173,7 +197,10 @@ export default {
       }
     },
     toRight() {
-      this.targetKeys = this.willCheckList.concat(this.targetKeys)
+      this.targetKeys = this.targetKeys.concat(this.willCheckList);
+      if(this.hasCheckAll) {
+        this.hasCheckList = this.hasCheckList.concat(this.willCheckList);
+      }
       this.willCheckAll = false
       this.willCheckList = []
     },
@@ -186,25 +213,88 @@ export default {
           }
         }
       }
+      if(this.willCheckAll) {
+        this.willCheckList = this.willCheckList.concat(this.hasCheckList);
+      }
       this.hasCheckAll = false
       this.hasCheckList = []
     },
+    swapItems(arr, index1, index2){
+      arr[index1] = arr.splice(index2, 1, arr[index1])[0]
+      return arr
+    },
+    toUp() {
+      this.hasCheckList.map(x => {
+        let idx = this.targetKeys.findIndex(y => {
+          return y === x;
+        })
+        if(idx > 0) {
+          this.targetKeys = this.swapItems(this.targetKeys, idx, idx - 1);
+        }
+      })
+      this.$forceUpdate()
+    },
+    toDown() {
+      this.hasCheckList.map(x => {
+        let idx = this.targetKeys.findIndex(y => {
+          return y === x;
+        })
+        if(idx < this.targetKeys.length - 1) {
+          this.targetKeys = this.swapItems(this.targetKeys, idx, idx + 1);
+        }
+      })
+      this.$forceUpdate()
+    },
+    toTop() {
+      this.targetKeys = [...new Set(this.hasCheckList.concat(this.targetKeys))]
+    },
+    toBottom() {
+      let obj = {};
+      this.targetKeys = this.targetKeys.concat(this.hasCheckList).reduceRight((cur, next) => {
+        obj[next] ? "" : obj[next] = true && cur.push(next);
+        return cur
+      }, []).reverse()
+    },
     dblToRight(data) {
-      this.targetKeys = [data].concat(this.targetKeys)
-      this.willCheckAll = false
-      this.willCheckList = []
+      // let arr = [data]
+      // this.targetKeys = this.targetKeys.concat(arr)
+      // if(this.hasCheckAll) {
+      //   this.hasCheckList = this.hasCheckList.concat(arr);
+      // }
+      // for(let i = 0; i < arr.length; i++) {
+      //   for(let j = 0; j < this.willCheckList.length; j ++) {
+      //     if(this.willCheckList[j] === arr[i]) {
+      //       this.willCheckList.splice(j, 1);
+      //       break;
+      //     }
+      //   }
+      // }
+      // if(this.willCheckList.length === 0) {
+      //   this.willCheckAll = false
+      // }
     },
     dblToLeft(data) {
-      let arr = [data]
-      for(let i = 0; i < arr.length; i++) {
-        for(let j = 0; j < this.targetKeys.length; j ++) {
-          if(this.targetKeys[j] === arr[i]) {
-            this.targetKeys.splice(j, 1);
-            break;
-          }
-        }
-      }
-      this.hasCheckAll = false
+      // let arr = [data]
+      // for(let i = 0; i < arr.length; i++) {
+      //   for(let j = 0; j < this.targetKeys.length; j ++) {
+      //     if(this.targetKeys[j] === arr[i]) {
+      //       this.targetKeys.splice(j, 1);
+      //       break;
+      //     }
+      //   }
+      //   for(let j = 0; j < this.hasCheckList.length; j ++) {
+      //     if(this.hasCheckList[j] === arr[i]) {
+      //       this.hasCheckList.splice(j, 1);
+      //       break;
+      //     }
+      //   }
+      // }
+      // if(this.hasCheckList.length === 0) {
+      //   this.hasCheckAll = false;
+      // }
+      // if(this.willCheckAll) {
+      //   this.willCheckList = this.willCheckList.concat(arr);
+      // }
     }
   },
   watch: {},
@@ -242,9 +332,13 @@ export default {
   .arrow{
     display: block;
     min-width: 24px;
-    &:nth-of-type(1) {
-      margin-bottom: 12px;
+    margin-bottom: 12px;
+    &:nth-last-child(1) {
+      margin-bottom: 0;
     }
+  }
+  .rotateArrow{
+    transform: rotate(90deg);
   }
 }
 

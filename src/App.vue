@@ -29,6 +29,13 @@
         <Submenu name="2">
           <template slot="title">
             <Icon type="ios-stats" />
+            组件2
+          </template>
+          <MenuItem name="/imagePreview" to="/imagePreview">图片预览</MenuItem>
+        </Submenu>
+        <Submenu name="3">
+          <template slot="title">
+            <Icon type="ios-stats" />
             作战室
           </template>
           <MenuItem name="/video" to="/video">录屏</MenuItem>
@@ -40,7 +47,7 @@
           <MenuItem name="/warRoom" to="/warRoom">作战室</MenuItem>
           <MenuItem name="/Websocket" to="/Websocket">Websocket</MenuItem>
         </Submenu>
-        <Submenu name="3">
+        <Submenu name="4">
           <template slot="title">
             <Icon type="ios-stats" />
             地图
