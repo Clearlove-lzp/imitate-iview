@@ -453,6 +453,18 @@ export const useRoute = () => {
   };
 };
 
+export const useRefs = () => {
+  // 获取 ref
+  const vm = getCurrentInstance();
+  if (!vm) {
+    throw new Error("必须在setup()方法里使用!!");
+  }
+  const refs = vm.proxy.$refs;
+  return {
+    refs,
+  };
+};
+
 export const useUserInfo = () => {
   // 用户基本信息
   const userInfo = JSON.parse(window.localStorage.getItem("userInfo"));
