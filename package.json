@@ -9,6 +9,7 @@
     "publish": "vue-cli-service build --mode production && vue-cli-service build --mode test"
   },
   "dependencies": {
+    "@turf/turf": "^6.5.0",
     "@vue/composition-api": "^1.4.1",
     "axios": "^0.19.2",
     "clipboard": "^2.0.10",
