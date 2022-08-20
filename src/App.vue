@@ -32,6 +32,7 @@
             组件2
           </template>
           <MenuItem name="/imagePreview" to="/imagePreview">图片预览</MenuItem>
+          <MenuItem name="/videoPlay" to="/videoPlay">rtmp流视频</MenuItem>
         </Submenu>
         <Submenu name="3">
           <template slot="title">
