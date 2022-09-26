@@ -57,6 +57,13 @@
           <MenuItem name="/tencentMap" to="/tencentMap">腾讯地图</MenuItem>
           <MenuItem name="/turf" to="/turf">Turf.js</MenuItem>
         </Submenu>
+        <Submenu name="5">
+          <template slot="title">
+            <Icon type="ios-stats" />
+            可配置
+          </template>
+          <MenuItem name="/configurableForm" to="/configurableForm">表单</MenuItem>
+        </Submenu>
         <div class="userDiv">
           <img class="headImage" src="@/assets/miao.png" alt="">
           Lzp
