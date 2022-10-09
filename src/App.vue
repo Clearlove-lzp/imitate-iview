@@ -33,6 +33,7 @@
           </template>
           <MenuItem name="/imagePreview" to="/imagePreview">图片预览</MenuItem>
           <MenuItem name="/videoPlay" to="/videoPlay">rtmp流视频</MenuItem>
+          <MenuItem name="/canvasStep" to="/canvasStep">canvas流程图</MenuItem>
         </Submenu>
         <Submenu name="3">
           <template slot="title">

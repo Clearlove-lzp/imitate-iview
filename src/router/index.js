@@ -312,6 +312,18 @@ const routes = [
         /* webpackChunkName: "configurableForm" */ "../views/configurable/configurableForm/index.vue"
       ),
   },
+  {
+    path: "/canvasStep",
+    name: "canvasStep",
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () =>
+      import(
+        /* webpackChunkName: "canvasStep" */ "../views/canvasStep/index.vue"
+      ),
+  },
+  ,
 ];
 
 const router = new VueRouter({
