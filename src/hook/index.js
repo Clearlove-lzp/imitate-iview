@@ -130,7 +130,15 @@ export const useForm = (form) => {
     });
   };
 
-  return [formRef, AppliForm, resetForm, validateForm];
+  const validateFieldForm = (prop) => {
+    return new Promise((resolve) => {
+      formRef.value.validateField(prop, (valid) => {
+        resolve(valid);
+      });
+    });
+  };
+
+  return [formRef, AppliForm, resetForm, validateForm, validateFieldForm];
 };
 
 export const useUpload = (url) => {
@@ -362,23 +370,6 @@ export const useVuex = () => {
   };
 };
 
-export const useProvide = () => {
-  // provide
-  const result = ref(null);
-  const provideFunc = (name, data) => {
-    result.value = data;
-    provide(name, result.value);
-  };
-  const injectFunc = (name) => {
-    result.value = inject(name);
-  };
-  return {
-    result,
-    provideFunc,
-    injectFunc,
-  };
-};
-
 class BusEvent {
   constructor() {
     // 收集订阅信息,调度中心
@@ -454,7 +445,7 @@ export const useRoute = () => {
 };
 
 export const useRefs = () => {
-  // 获取 ref
+  // 获取refs
   const vm = getCurrentInstance();
   if (!vm) {
     throw new Error("必须在setup()方法里使用!!");
