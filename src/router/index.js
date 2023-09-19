@@ -323,7 +323,15 @@ const routes = [
         /* webpackChunkName: "canvasStep" */ "../views/canvasStep/index.vue"
       ),
   },
-  ,
+  {
+    path: "/vxeTable",
+    name: "vxeTable",
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () =>
+      import(/* webpackChunkName: "vxeTable" */ "../views/vxeTable/index.vue"),
+  },
 ];
 
 const router = new VueRouter({

@@ -14,12 +14,19 @@
         :on-success="successHandler"
         :show-upload-list="false"
         ref="my-uploadF"
-        size="small">
-        <Button type="info">{{"批量导入"}}</Button>
+        size="small"
+      >
+        <Button type="info">{{ "批量导入" }}</Button>
       </Upload>
       <Button type="success" @click.native="addRow('testArr')">新增一行</Button>
     </div>
-    <Table ref="refTable" border :columns="columns('refTable', 'testArr1')" :data="testArr1">
+    <Table
+      ref="refTable"
+      border
+      :columns="columns('refTable', 'testArr1')"
+      :data="testArr1"
+      @on-sort-change="sortChange"
+    >
       <template slot="name1" slot-scope="props">
         <Input v-model="props.row.name1" @on-change="dataChange(props)"></Input>
       </template>
@@ -36,18 +43,23 @@
         <Input v-model="props.row.name5" @on-change="dataChange(props)"></Input>
       </template>
     </Table>
-    <div style="margin-top: 10px;">
-      <Page :total="total" :current="current" :page-size="pageSize" @on-change="changePage"></Page>
+    <div style="margin-top: 10px">
+      <Page
+        :total="total"
+        :current="current"
+        :page-size="pageSize"
+        @on-change="changePage"
+      ></Page>
     </div>
   </div>
 </template>
 
 <script>
-import { uploadUrl, uploadInfoApi } from '@/api/index'
+import { uploadUrl, uploadInfoApi } from "@/api/index";
 
 export default {
   props: {},
-  data () {
+  data() {
     return {
       testArr: [],
       current: 1,
@@ -69,6 +81,7 @@ export default {
           {
             title: "名称1",
             key: "name1",
+            sortable: "custom",
             render: (h, params) => {
               this[val][params.index] = params.row;
               return h(
@@ -149,7 +162,7 @@ export default {
                       },
                       on: {
                         "on-ok": () => {
-                          this.deleteData(val,params.row, params.index);
+                          this.deleteData(val, params.row, params.index);
                         },
                       },
                     },
@@ -175,7 +188,7 @@ export default {
             },
           },
         ];
-        if(this.isNfv) {
+        if (this.isNfv) {
           arr.splice(5, 0, {
             title: "名称5",
             key: "name5",
@@ -190,23 +203,29 @@ export default {
                 })
               );
             },
-          },)
+          });
         }
-        return arr
-      }
+        return arr;
+      };
     },
     total() {
-      return this.testArr.length
+      return this.testArr.length;
     },
     testArr1() {
-      let arr = []
-      let baseArr = JSON.parse(JSON.stringify(this.testArr))
+      let arr = [];
+      let baseArr = JSON.parse(JSON.stringify(this.testArr));
       return baseArr.filter((item, index) => {
-        return ((this.current - 1) * this.pageSize <= index) && (index < this.current * this.pageSize)
-      })
-    }
+        return (
+          (this.current - 1) * this.pageSize <= index &&
+          index < this.current * this.pageSize
+        );
+      });
+    },
   },
   methods: {
+    sortChange(data) {
+      console.log(data);
+    },
     // 新增一行网元
     addRow(val) {
       if (this[val].length === 0) {
@@ -225,23 +244,23 @@ export default {
       this[val].splice(index, 1);
     },
     changePage(value) {
-      this.current = value
+      this.current = value;
     },
     dataChange(value) {
-      let num = (this.current - 1) * this.pageSize + value.idx
+      let num = (this.current - 1) * this.pageSize + value.idx;
       this.testArr[num] = {
         name1: value.row.name1,
         name2: value.row.name2,
         name3: value.row.name3,
         name4: value.row.name4,
-      }
+      };
     },
     // 上传成功钩子-影响网元
     successHandler(response, file, fileList) {
       if (response.filename && response.id) {
         this.$Message.success("上传成功");
-        let params = `fileId=${response.id}`
-        uploadInfoApi(params).then(res => {
+        let params = `fileId=${response.id}`;
+        uploadInfoApi(params).then((res) => {
           if (res.data.success && res.data.data) {
             if (this.testArr.length === 1 && !this.testArr[0].name1) {
               this.testArr = [];
@@ -255,7 +274,7 @@ export default {
               });
             });
           }
-        })
+        });
       } else {
         this.$Message.success("上传失败");
       }
@@ -264,7 +283,7 @@ export default {
   watch: {},
   mounted() {
     this.$nextTick(() => {
-      this.testArr = []
+      this.testArr = [];
       // this.testArr = [
       //   {
       //     name1: "1",
@@ -381,39 +400,34 @@ export default {
       //     name4: "19",
       //   },
       // ]
-    })
+    });
   },
   created() {
-    this.uploadUrl = uploadUrl
+    this.uploadUrl = uploadUrl;
   },
-}
+};
 </script>
 
 <style scoped lang="stylus">
-.cds-header {
-  margin: 20px 0;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  height: 30px;
-  font-size: 16px;
-  color: #333;
-  .d1 {
-    display: flex;
-    align-items: center;
-    .sp1 {
-      margin-right: 4px;
-      width: 4px;
-      height: 18px;
-      border-radius: 2px;
-      background: #315eff;
-    }
-  }
-  .d2 {
-    .btn {
-      height: 26px;
-      line-height: 10px;
-    }
-  }
-}
+.cds-header
+  margin 20px 0
+  display flex
+  justify-content space-between
+  align-items center
+  height 30px
+  font-size 16px
+  color #333
+  .d1
+    display flex
+    align-items center
+    .sp1
+      margin-right 4px
+      width 4px
+      height 18px
+      border-radius 2px
+      background #315eff
+  .d2
+    .btn
+      height 26px
+      line-height 10px
 </style>
