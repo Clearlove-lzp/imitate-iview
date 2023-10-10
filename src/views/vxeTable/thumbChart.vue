@@ -79,7 +79,7 @@ export default {
       deep: true,
     },
     chartWidth() {
-      this.charts.resize();
+      this.myCharts.resize();
     },
   },
 };
