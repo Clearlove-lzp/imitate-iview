@@ -211,52 +211,21 @@ L.TileLayer.BaiduLayer.desc = {
     Map: "http://shangetu{s}.map.bdimg.com/it/u=x={x};y={y};z={z};v=009;type=sate&fm=46",
     Road: "http://online{s}.map.bdimg.com/tile/?qt=tile&x={x}&y={y}&z={z}&styles=sl",
   },
-  customLayerSQ: {
-    Map: "http://10.8.132.221/jslib/Tiles/baidu/{z}/{x}/{y}.jpg",
-  },
-  customLayerSat: {
-    Map: "http://10.8.132.221/inasmap/Tiles/baidu/jsmap/weixing/{z}/{x}/{y}.jpg",
-    Road: "http://10.8.132.221/inasmap/Tiles/baidu/jsmap/luwang/{z}/{x}/{y}.jpg",
-  },
-  customLayerJS: {
-    Map: "http://10.8.132.221/inasmap/Tiles/baidu/jsmap/changgui/{z}/{x}/{y}.jpg",
-  },
-  customLayerDSN: {
-    Map: "http://10.221.247.27:8080/sh/tilesDSN/newPics/{z}/{x}/{y}.jpg",
-  },
+  // customLayerSQ: {
+  //   Map: "http://10.8.132.221/jslib/Tiles/baidu/{z}/{x}/{y}.jpg",
+  // },
+  // customLayerSat: {
+  //   Map: "http://10.8.132.221/inasmap/Tiles/baidu/jsmap/weixing/{z}/{x}/{y}.jpg",
+  //   Road: "http://10.8.132.221/inasmap/Tiles/baidu/jsmap/luwang/{z}/{x}/{y}.jpg",
+  // },
+  // customLayerJS: {
+  //   Map: "http://10.8.132.221/inasmap/Tiles/baidu/jsmap/changgui/{z}/{x}/{y}.jpg",
+  // },
+  // customLayerDSN: {
+  //   Map: "http://10.221.247.27:8080/sh/tilesDSN/newPics/{z}/{x}/{y}.jpg",
+  // },
   customLayerNormalSH: {
     Map: "http://10.221.71.221:8080/sh/tilesBaidu/changgui/{z}/{x}/{y}.jpg",
-  },
-  customLayerSatSH: {
-    Map: "http://10.221.71.221:8080/sh/tilesBaidu/weixing/{z}/{x}/{y}.jpg",
-    Road: "http://10.221.71.221:8080/sh/tilesBaidu/luwang/{z}/{x}/{y}.jpg",
-  },
-  subdomains: "0123456789",
-};
-
-L.TileLayer.BaiduLayer.descBlue = {
-  Normal: {
-    Map: "http://online{s}.map.bdimg.com/tile/?qt=tile&x={x}&y={y}&z={z}&styles=pl",
-  },
-  Satellite: {
-    Map: "http://shangetu{s}.map.bdimg.com/it/u=x={x};y={y};z={z};v=009;type=sate&fm=46",
-    Road: "http://online{s}.map.bdimg.com/tile/?qt=tile&x={x}&y={y}&z={z}&styles=sl",
-  },
-  customLayerSQ: {
-    Map: "http://10.8.132.221/jslib/Tiles/baidu/{z}/{x}/{y}.jpg",
-  },
-  customLayerSat: {
-    Map: "http://10.8.132.221/inasmap/Tiles/baidu/jsmap/weixing/{z}/{x}/{y}.jpg",
-    Road: "http://10.8.132.221/inasmap/Tiles/baidu/jsmap/luwang/{z}/{x}/{y}.jpg",
-  },
-  customLayerJS: {
-    Map: "http://10.221.213.85:8080/shjkws/wuyelan/{z}/{x}/{y}.jpg",
-  },
-  customLayerDSN: {
-    Map: "http://10.221.247.27:8080/sh/tilesDSN/newPics/{z}/{x}/{y}.jpg",
-  },
-  customLayerNormalSH: {
-    Map: "http://10.221.213.85:8080/shjkws/wuyelan/{z}/{x}/{y}.jpg",
   },
   customLayerSatSH: {
     Map: "http://10.221.71.221:8080/sh/tilesBaidu/weixing/{z}/{x}/{y}.jpg",
