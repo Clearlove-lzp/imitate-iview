@@ -20,6 +20,7 @@
     "custom-json2excel": "^2.0.0",
     "echarts": "^4.2.0-rc.1",
     "element-ui": "^2.15.2",
+    "leaflet": "^1.9.4",
     "mammoth": "^1.4.19",
     "moment": "^2.29.1",
     "uuid": "^8.3.2",
