@@ -341,6 +341,17 @@ const routes = [
     component: () =>
       import(/* webpackChunkName: "shGis" */ "../views/shGis/LMapSH.vue"),
   },
+  {
+    path: "/positionChange",
+    name: "positionChange",
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () =>
+      import(
+        /* webpackChunkName: "positionChange" */ "../views/positionChange/index.vue"
+      ),
+  },
 ];
 
 const router = new VueRouter({
