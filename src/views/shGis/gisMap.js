@@ -37,10 +37,8 @@ const initConfigMarks = (list, deviceClickFunc) => {
         deviceModal.style.display = "block";
         popup.setContent(deviceModal);
         popup.openOn(map);
-        deviceClickFunc();
       });
     }
   }
 };
-
 export { map, initMap, initConfigMarks };
