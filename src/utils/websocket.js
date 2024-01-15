@@ -1,148 +1,169 @@
-const websoctekFactory = (wsurl, fn) => {
-  let websock = null;
-  let lockReconnect = false;
-  let timeout = 10 * 1000;
-  let timeoutObj = null;
-  let serverTimeoutObj = null;
-  let timeoutnum = null;
-  let reconnectCount = 0;
-  let wsuri = wsurl;
+/**
+ * websocket工厂
+ * @param wsUrl
+ * @param receiveMessage
+ * @param option
+ */
 
-  const initWebSocket = () => {
-    //建立连接
-    //初始化weosocket
-    //const wsuri = "ws://sms.填写您的地址.com/websocket/" + charId; //ws地址
+/**
+ * option
+ * @param onError
+ * @param onOpen
+ * @param msgTimeOutDelay
+ * @param msgTimerOutTimer
+ */
+
+export const webSocketFactory = (wsUrl, receiveMessage, option) => {
+  let webSock;
+  let reconnectTimer;
+  let lockReconnect = false; // 是否是重连中
+  let reconnectCount = 0; // 重连次数
+  let pingTimer; // 心跳延时器
+  let msgTimerOutTimer;
+
+  const { msgTimeOutDelay, heartbeatIncoming } = {
+    msgTimeOutDelay: 120000,
+    heartbeatIncoming: 10000,
+    ...option,
+  };
+
+  /**
+   * 初始化
+   */
+  const init = () => {
+    // 建立连接
+    // 初始化weosocket
+    // const wsuri = "ws://sms.填写您的地址.com/websocket/" + charId; //ws地址
     // const wsuri = "ws://198.103.124.112:8080/ws";
-    //建立连接
-    websock = new WebSocket(wsuri);
-    // eslint-disable-next-line no-console
-    //连接成功
-    websock.onopen = websocketonopen;
-    //连接错误
-    websock.onerror = websocketonerror;
-    //接收信息
-    websock.onmessage = websocketonmessage;
-    //连接关闭
-    websock.onclose = websocketclose;
-  }
+    // 建立连接
+    webSock = new WebSocket(wsUrl);
+    // 连接成功
+    webSock.onopen = onOpenHandle;
+    // 连接错误
+    webSock.onerror = onErrorHandle;
+    // 接收信息
+    webSock.onmessage = onMessageHandle;
+    // 连接关闭
+    webSock.onclose = onCloseHandle;
+  };
 
+  /**
+   * 连接失败尝试重连，5s尝试一次
+   */
   const reconnect = () => {
-    //重新连接
-    // eslint-disable-next-line no-console
-    console.log('重连锁', lockReconnect)
+    destroy();
+    // 重新连接
+    console.info("重连锁", lockReconnect);
     if (lockReconnect) {
       return;
     }
-    // eslint-disable-next-line no-console
-    console.log("重连次数" ,reconnectCount)
-    if(reconnectCount > 5) {
+    console.info("重连次数", reconnectCount);
+    if (reconnectCount > 5) {
+      if (option.onError != null) {
+        option.onError();
+      }
       return;
     }
     lockReconnect = true;
-    //没连接上会一直重连，设置延迟避免请求过多
-    timeoutnum && clearTimeout(timeoutnum);
-    timeoutnum = setTimeout(function() {
-      //新连接
-      initWebSocket();
-      reconnectCount ++;
+    // 没连接上会一直重连，设置延迟避免请求过多
+    clearTimeout(reconnectTimer);
+
+    reconnectTimer = window.setTimeout(() => {
+      reconnectCount++;
       lockReconnect = false;
+      // 新连接
+      init();
     }, 5000);
-  }
+  };
 
-  const reset = () => {
-    //重置心跳
-    //清除时间
-    clearTimeout(timeoutObj);
-    clearTimeout(serverTimeoutObj);
-    //重启心跳
-    start();
-  }
-
-  const start = () => {
-    // eslint-disable-next-line no-console
-    //开启心跳
-    timeoutObj && clearTimeout(timeoutObj);
-    serverTimeoutObj && clearTimeout(serverTimeoutObj);
-
-    timeoutObj = setTimeout(() => {
-      //这里发送一个心跳，后端收到后，返回一个心跳消息，
-      if (websock.readyState == 1) {
-        // eslint-disable-next-line no-console
-        console.log('正常');
-        //如果连接正常,发送心跳，如果发送成功，将会执行websocketonopen
-        // eslint-disable-next-line no-unused-vars
-        let msg = {FG: 'HB', userName: '刘志鹏'};
-        // self.websock.send("heartCheck");
-        websock.send(JSON.stringify(msg));
-      } else {
-        //否则重连
-        reconnect();
-      }
-      // 发送心跳后开始计时
-      serverTimeoutObj = setTimeout(function() {
-        //超时关闭
-        websock.close();
-      }, timeout);
-    }, timeout)
-  }
-
-  const websocketonopen = () => {
-    //连接成功事件
-    //提示成功
-    // eslint-disable-next-line no-unused-vars
-    let msg = {
-      FG: "REG",
-      token: "eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiIyMDkiLCJpYXQiOjE1ODcwMjcyOTgsInN1YiI6Imx6cHMiLCJleHAiOjE1ODcxMTM2OTh9.LdtsG6SRMBDIiC9jFqy8wwd1ALvxpgpfVxNQjZifOVM",
-      userId: "209",
-    }
-    websocketsend(JSON.stringify(msg))
-    // eslint-disable-next-line no-console
-    console.log('连接成功')
+  /**
+   * websocket连接成功
+   */
+  const onOpenHandle = () => {
+    // 连接成功事件 （清除可能存在的重连定时器）
+    clearTimeout(reconnectTimer);
+    // 提示成功
+    console.info("连接成功");
+    lockReconnect = false;
     reconnectCount = 0;
-    //开启心跳
-    start();
-  }
+    // 开启心跳
+    pingTimer = window.setInterval(() => {
+      // webSock.send(new Uint8Array([8, 1, 8, 1]));
+      webSock.send("ping");
+    }, heartbeatIncoming);
 
-  const websocketonerror = () => {
-    //连接失败事件
-    //错误
-    // eslint-disable-next-line no-console
-    console.log("WebSocket连接发生错误");
-    //错误提示
-    //重连
-    reconnect();
-  }
+    // 检测是否长时间未收到消息
+    msgTimerOutTimer = window.setTimeout(() => {
+      reconnect();
+    }, msgTimeOutDelay);
 
-  const websocketclose = (e) => {
-    //连接关闭事件
-    //关闭
-    if(e.code) {
-      // eslint-disable-next-line no-console
-      console.log("connection closed (" + e.code + ")");
+    if (option.onOpen != null) {
+      option.onOpen();
     }
-    //提示关闭
-    //重连
+  };
+
+  const onErrorHandle = () => {
+    // 连接失败事件
+    // 错误
+    console.error("WebSocket连接发生错误");
+    // 错误提示
+    // 重连
     reconnect();
-  }
+  };
 
-  const websocketonmessage = (event) => {
-    //接收服务器推送的信息
-    //打印收到服务器的内容
-    // eslint-disable-next-line no-console
-    console.log(event.data);
-    fn && fn(event)
-    //收到服务器信息，心跳重置
-    reset();
-    //播放声音
-  }
+  const onCloseHandle = (e) => {
+    // 连接关闭事件
+    // 关闭
+    console.error(`connection closed ${e.code}`);
+    // 提示关闭
+    // 重连
+    reconnect();
+  };
 
-  const websocketsend = (msg) => {
-    //向服务器发送信息
-    //数据发送
-    websock.send(msg);
-  }
+  /**
+   * 接收到消息
+   * @param event
+   */
+  const onMessageHandle = (event) => {
+    if (event.data !== "pong") {
+      receiveMessage(event.data);
+    }
 
-  initWebSocket()
-}
+    // 开始超时检测
+    clearTimeout(msgTimerOutTimer);
+    msgTimerOutTimer = window.setTimeout(() => {
+      reconnect();
+    }, msgTimeOutDelay);
+  };
 
-export default websoctekFactory
+  /**
+   * 销毁
+   */
+  const destroy = () => {
+    clearInterval(pingTimer);
+    clearTimeout(reconnectTimer);
+    clearTimeout(msgTimerOutTimer);
+    webSock.onopen = null;
+    webSock.onerror = null;
+    webSock.onmessage = null;
+    webSock.onclose = null;
+    webSock.close();
+  };
+
+  /**
+   * 发送消息
+   * @param msg
+   */
+  const sendMsg = (msg) => {
+    // 向服务器发送信息
+    if (webSock && webSock.readyState === WebSocket.OPEN) {
+      webSock.send(msg);
+    }
+  };
+
+  return {
+    init,
+    sendMsg,
+    destroy,
+  };
+};

@@ -8,8 +8,8 @@ export const websocketFactory = {
       serverTimeoutObj: null, //心跳倒计时
       timeoutnum: null, //断开 重连倒计时
       reconnectCount: 0,
-      wsuri: "ws://198.103.124.112:8080/ws"
-    }
+      wsuri: "ws://198.103.124.112:8080/ws",
+    };
   },
   methods: {
     initWebSocket() {
@@ -32,13 +32,13 @@ export const websocketFactory = {
     reconnect() {
       //重新连接
       // eslint-disable-next-line no-console
-      console.log('重连锁', this.lockReconnect)
+      console.log("重连锁", this.lockReconnect);
       if (this.lockReconnect) {
         return;
       }
       // eslint-disable-next-line no-console
-      console.log("重连次数" ,this.reconnectCount)
-      if(this.reconnectCount > 5) {
+      console.log("重连次数", this.reconnectCount);
+      if (this.reconnectCount > 5) {
         return;
       }
       this.lockReconnect = true;
@@ -47,7 +47,7 @@ export const websocketFactory = {
       this.timeoutnum = setTimeout(() => {
         //新连接
         this.initWebSocket();
-        this.reconnectCount ++;
+        this.reconnectCount++;
         this.lockReconnect = false;
       }, 5000);
     },
@@ -69,10 +69,10 @@ export const websocketFactory = {
         //这里发送一个心跳，后端收到后，返回一个心跳消息，
         if (this.websock.readyState == 1) {
           // eslint-disable-next-line no-console
-          console.log('正常');
+          console.log("正常");
           //如果连接正常,发送心跳，如果发送成功，将会执行websocketonopen
           // eslint-disable-next-line no-unused-vars
-          let msg = {FG: 'HB', userName: '刘志鹏'};
+          let msg = { FG: "HB", userName: "刘志鹏" };
           // self.websock.send("heartCheck");
           this.websock.send(JSON.stringify(msg));
         } else {
@@ -84,7 +84,7 @@ export const websocketFactory = {
           //超时关闭
           this.websock.close();
         }, this.timeout);
-      }, this.timeout)
+      }, this.timeout);
     },
     websocketonopen() {
       //连接成功事件
@@ -92,13 +92,15 @@ export const websocketFactory = {
       // eslint-disable-next-line no-unused-vars
       let msg = {
         FG: "REG",
-        token: "eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiIyMDkiLCJpYXQiOjE1ODcwMjcyOTgsInN1YiI6Imx6cHMiLCJleHAiOjE1ODcxMTM2OTh9.LdtsG6SRMBDIiC9jFqy8wwd1ALvxpgpfVxNQjZifOVM",
+        token:
+          "eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiIyMDkiLCJpYXQiOjE1ODcwMjcyOTgsInN1YiI6Imx6cHMiLCJleHAiOjE1ODcxMTM2OTh9.LdtsG6SRMBDIiC9jFqy8wwd1ALvxpgpfVxNQjZifOVM",
         userId: "209",
-      }
-      this.websocketsend(JSON.stringify(msg))
+      };
+      this.websocketsend(JSON.stringify(msg));
       // eslint-disable-next-line no-console
-      console.log('连接成功')
+      console.log("连接成功");
       this.reconnectCount = 0;
+
       //开启心跳
       this.start();
     },
@@ -114,7 +116,7 @@ export const websocketFactory = {
     websocketclose(e) {
       //连接关闭事件
       //关闭
-      if(e.code) {
+      if (e.code) {
         // eslint-disable-next-line no-console
         console.log("connection closed (" + e.code + ")");
       }
@@ -135,11 +137,9 @@ export const websocketFactory = {
       //向服务器发送信息
       //数据发送
       this.websock.send(msg);
-    }
+    },
   },
-  created() {
-    
-  },
+  created() {},
   destroyed() {
     this.lockReconnect = true;
     this.timeoutnum && clearTimeout(this.timeoutnum);
@@ -151,5 +151,5 @@ export const websocketFactory = {
   mounted() {
     //页面刚进入时开启长连接
     this.initWebSocket();
-  }
-}
+  },
+};
