@@ -88,8 +88,10 @@ export const webSocketFactory = (wsUrl, receiveMessage, option) => {
     reconnectCount = 0;
     // 开启心跳
     pingTimer = window.setInterval(() => {
-      // webSock.send(new Uint8Array([8, 1, 8, 1]));
-      webSock.send("ping");
+      let mag = {
+        messageType: 3,
+      };
+      webSock.send(JSON.stringify(mag));
     }, heartbeatIncoming);
 
     // 检测是否长时间未收到消息
@@ -125,10 +127,7 @@ export const webSocketFactory = (wsUrl, receiveMessage, option) => {
    * @param event
    */
   const onMessageHandle = (event) => {
-    if (event.data !== "pong") {
-      receiveMessage(event.data);
-    }
-
+    receiveMessage(event.data);
     // 开始超时检测
     clearTimeout(msgTimerOutTimer);
     msgTimerOutTimer = window.setTimeout(() => {
