@@ -9,6 +9,7 @@
  * option
  * @param onError
  * @param onOpen
+ * @param onClose
  * @param msgTimeOutDelay
  * @param msgTimerOutTimer
  */
@@ -114,6 +115,9 @@ export const webSocketFactory = (wsUrl, receiveMessage, option) => {
   };
 
   const onCloseHandle = (e) => {
+    if (option.onClose != null) {
+      option.onClose();
+    }
     // 连接关闭事件
     // 关闭
     console.error(`connection closed ${e.code}`);

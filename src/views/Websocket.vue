@@ -2,7 +2,7 @@
 <template>
   <div class="chart">
     <div class="chart-list-wrap">
-      <div class="link">
+      <div class="link" ref="wrap-container">
         <div class="wrap">
           <div>
             <div class="voice-info">
@@ -51,15 +51,9 @@
                   <div class="content-text" title="测试">
                     <span class="inner-content">测试</span>
                   </div>
-                  <div class="content-file" @click="handleView">
-                    <img
-                      src="@/assets/gis/ic-head.png"
-                      alt="图片加载失败"
-                      title="点击查看大图"
-                      class="content-file-img"
-                    />
-                  </div>
+                  <div class="content-file"></div>
                 </div>
+                <Icon type="ios-loading" class="msg-loading" />
               </div>
             </div>
           </div>
@@ -111,6 +105,44 @@
                   </div>
                   <div class="ptt">PTT</div>
                 </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          v-for="x in datalist"
+          :key="x.messageId"
+          class="wrap"
+          :class="{ 'self-wrap': x.fromUserId === '1575001072192' }"
+        >
+          <div v-if="x.messageType === 1">
+            <div
+              class="im-template"
+              :class="{ 'self-im-template': x.fromUserId === '1575001072192' }"
+            >
+              <div class="left">
+                <img src="@/assets/gis/ic-head.png" alt="" />
+              </div>
+              <div class="right">
+                <div class="info">
+                  <span class="name">{{
+                    x.fromUserId === "1575001072192" ? "我" : x.fromUserName
+                  }}</span>
+                  <span class="date">{{ x.messageSendTime }}</span>
+                </div>
+                <div class="content">
+                  <div class="content-text" :title="x.messageContent">
+                    <span class="inner-content">{{ x.messageContent }}</span>
+                  </div>
+                  <div class="content-file"></div>
+                </div>
+                <Icon
+                  type="ios-alert"
+                  class="msg-error"
+                  color="red"
+                  v-if="!x.status"
+                />
+                <Icon type="ios-loading" class="msg-loading" v-if="x.loading" />
               </div>
             </div>
           </div>
@@ -188,6 +220,7 @@
 import { webSocketFactory } from "@/utils/websocket.js";
 // import io from "socket.io-client";
 import moment from "moment";
+import { v4 as uuidv4 } from "uuid";
 
 export default {
   props: {},
@@ -205,6 +238,8 @@ export default {
       audioChunks: [],
       recordLoading: false,
       isAudioPlay: false,
+      isWsOpen: false,
+      datalist: [],
     };
   },
   components: {},
@@ -218,25 +253,62 @@ export default {
         fromUserId: "1575001072192",
         fromUserName: "system",
         messageSendTime: moment().format("YYYY-MM-DDD HH:mm:ss"),
+        messageId: uuidv4().split("-").join(""),
       };
       this.sendMsgHandle(JSON.stringify(msg));
+      let info = {
+        ...msg,
+        status: false,
+        loading: true,
+      };
+      this.datalist.push(info);
+      this.message = "";
     },
     receiveMessage(msg) {
       // messageType
-      // 1: 发送文本消息
-      // 2: 接收文本消息
-      // 3: 发送Ping消息
-      // 4: 接收Ping消息
+      // 0: 异常登录
+      // 1: 文本消息(发送自己/接收他人)
+      // 2: 文本消息(响应自己)
+      // 3: Ping消息(发送自己)
+      // 4: Ping消息(响应自己)
       let info = JSON.parse(msg);
       if (info.successMark) {
-        switch (info.result.messageType) {
+        switch (info.messageType) {
+          case 1:
+            this.datalist.push({
+              ...info.result,
+              status: true,
+              loading: false,
+            });
+            break;
           case 2:
+            let idx = this.datalist.findIndex(
+              (x) => x.messageId === info.requestMessageId
+            );
+            if (idx > -1) {
+              this.datalist[idx].status = true;
+              this.datalist[idx].loading = false;
+            }
+            break;
+        }
+      } else {
+        switch (info.messageType) {
+          case 0:
+            this.$Message.error(info.msg);
+            this.isWsOpen = false;
+            this.destroyHandle();
+            break;
+          case 2:
+            let idx = this.datalist.findIndex(
+              (x) => x.messageId === info.requestMessageId
+            );
+            if (idx > -1) {
+              this.datalist[idx].status = false;
+              this.datalist[idx].loading = false;
+            }
             break;
         }
       }
-    },
-    onOpenHandle() {
-      this.$Message.success("初始化成功");
     },
     onOpen(data) {
       this.communicateShow = true;
@@ -322,7 +394,16 @@ export default {
       }
     },
   },
-  watch: {},
+  watch: {
+    datalist() {
+      this.$nextTick(() => {
+        if (this.$refs["wrap-container"]) {
+          this.$refs["wrap-container"].scrollTop =
+            this.$refs["wrap-container"].scrollHeight;
+        }
+      });
+    },
+  },
   mounted() {
     // eslint-disable-next-line no-console
     // websocketFactory
@@ -340,10 +421,15 @@ export default {
     });
 
     const { init, sendMsg, destroy } = webSocketFactory(
-      `ws://10.8.133.213:8989/chatroom?token=5d878432-30e7-43ab-9959-3887a9aafbad&warRoomId=4ddafb1665d2b737eda4b5af5c303dec`,
+      `ws://10.8.133.213:8989/chatroom?token=26f9170b-1225-4d3b-9905-ac883ea14f76&warRoomId=2955206e9abb6abfb14955c9fa7b068b`,
       this.receiveMessage,
       {
-        onOpen: this.onOpenHandle,
+        onOpen: () => {
+          this.isWsOpen = true;
+        },
+        onClose: () => {
+          this.isWsOpen = false;
+        },
       }
     );
     this.destroyHandle = destroy;
@@ -366,6 +452,18 @@ export default {
   100% {
     opacity: 1;
     /*结尾状态 透明度为1*/
+  }
+}
+
+@keyframes ani-load-loop {
+  0% {
+    transform: rotate(0);
+  }
+  50% {
+    transform: rotate(180deg);
+  }
+  100% {
+    transform: rotate(360deg);
   }
 }
 .chart {
@@ -505,6 +603,12 @@ export default {
               right: -30px;
               top: 42px;
               cursor: pointer;
+            }
+            .msg-loading {
+              position: absolute;
+              right: -30px;
+              top: 42px;
+              animation: ani-load-loop 1s linear infinite;
             }
             .content {
               padding: 6px 10px 6px 10px;
