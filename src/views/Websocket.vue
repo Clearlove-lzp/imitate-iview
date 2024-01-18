@@ -124,13 +124,18 @@
                 <img src="@/assets/gis/ic-head.png" alt="" />
               </div>
               <div class="right">
-                <div class="info">
-                  <span class="name">{{
-                    x.fromUserId === "1575001072192" ? "我" : x.fromUserName
-                  }}</span>
+                <div class="info" v-if="x.fromUserId === '1575001072192'">
+                  <span class="date">{{ x.messageSendTime }}</span>
+                  <span class="name">我</span>
+                </div>
+                <div class="info" v-else>
+                  <span class="name">{{ x.fromUserName }}</span>
                   <span class="date">{{ x.messageSendTime }}</span>
                 </div>
-                <div class="content">
+                <div
+                  class="content"
+                  :class="{ 'self-content': x.fromUserId === '1575001072192' }"
+                >
                   <div class="content-text" :title="x.messageContent">
                     <span class="inner-content">{{ x.messageContent }}</span>
                   </div>
@@ -140,9 +145,122 @@
                   type="ios-alert"
                   class="msg-error"
                   color="red"
-                  v-if="!x.status"
+                  v-if="!x.status && !x.loading"
+                  :class="{
+                    'self-msg-error': x.fromUserId === '1575001072192',
+                  }"
+                  @click="reSendFunc(x)"
                 />
-                <Icon type="ios-loading" class="msg-loading" v-if="x.loading" />
+                <Icon
+                  type="ios-loading"
+                  class="msg-loading"
+                  v-if="x.loading"
+                  :class="{
+                    'self-msg-loading': x.fromUserId === '1575001072192',
+                  }"
+                />
+              </div>
+            </div>
+          </div>
+          <div v-if="x.messageType === 5">
+            <div
+              class="im-template"
+              :class="{ 'self-im-template': x.fromUserId === '1575001072192' }"
+            >
+              <div class="left">
+                <img src="@/assets/gis/ic-head.png" alt="" />
+              </div>
+              <div class="right">
+                <div class="info" v-if="x.fromUserId === '1575001072192'">
+                  <span class="date">{{ x.messageSendTime }}</span>
+                  <span class="name">我</span>
+                </div>
+                <div class="info" v-else>
+                  <span class="name">{{ x.fromUserName }}</span>
+                  <span class="date">{{ x.messageSendTime }}</span>
+                </div>
+                <div
+                  class="content"
+                  :class="{ 'self-content': x.fromUserId === '1575001072192' }"
+                >
+                  <div class="content-file" @click="handleView">
+                    <img
+                      :src="isHttps ? x.fileViewUrlHttps : x.fileViewUrl"
+                      alt="图片加载失败"
+                      title="点击查看大图"
+                      class="content-file-img"
+                    />
+                  </div>
+                </div>
+                <Icon
+                  type="ios-alert"
+                  class="msg-error"
+                  color="red"
+                  v-if="!x.status && !x.loading"
+                  :class="{
+                    'self-msg-error': x.fromUserId === '1575001072192',
+                  }"
+                  @click="reSendFunc(x)"
+                />
+                <Icon
+                  type="ios-loading"
+                  class="msg-loading"
+                  v-if="x.loading"
+                  :class="{
+                    'self-msg-loading': x.fromUserId === '1575001072192',
+                  }"
+                />
+              </div>
+            </div>
+          </div>
+          <div v-if="x.messageType === 7">
+            <div
+              class="im-template"
+              :class="{ 'self-im-template': x.fromUserId === '1575001072192' }"
+            >
+              <div class="left">
+                <img src="@/assets/gis/ic-head.png" alt="" />
+              </div>
+              <div class="right">
+                <div class="info" v-if="x.fromUserId === '1575001072192'">
+                  <span class="date">{{ x.messageSendTime }}</span>
+                  <span class="name">我</span>
+                </div>
+                <div class="info" v-else>
+                  <span class="name">{{ x.fromUserName }}</span>
+                  <span class="date">{{ x.messageSendTime }}</span>
+                </div>
+                <div class="file-container">
+                  <div class="flie-name">
+                    <Icon type="ios-document" size="14" />
+                    <span>{{ x.fileName }}</span>
+                  </div>
+                  <div
+                    class="flie-download"
+                    @click="downloadFile(x)"
+                    v-if="x.fileDownloadUrl"
+                  >
+                    <Icon type="md-download" size="18" color="#fca802" />
+                  </div>
+                </div>
+                <Icon
+                  type="ios-alert"
+                  class="msg-error"
+                  color="red"
+                  v-if="!x.status && !x.loading"
+                  :class="{
+                    'self-msg-error': x.fromUserId === '1575001072192',
+                  }"
+                  @click="reSendFunc(x)"
+                />
+                <Icon
+                  type="ios-loading"
+                  class="msg-loading"
+                  v-if="x.loading"
+                  :class="{
+                    'self-msg-loading': x.fromUserId === '1575001072192',
+                  }"
+                />
               </div>
             </div>
           </div>
@@ -177,14 +295,8 @@
           <Upload
             :before-upload="handleUpload"
             action="//jsonplaceholder.typicode.com/posts/"
-            :format="['jpg', 'jpeg', 'png']"
-            accept=".jpg,.jpeg,.png"
-            :on-format-error="handleFormatError"
           >
-            <Icon
-              type="ios-folder-outline"
-              title="支持图片(jpg，jpeg，png)，且小于10MB！"
-            />
+            <Icon type="ios-folder-outline" />
           </Upload>
         </div>
         <div class="footer-right">
@@ -200,7 +312,7 @@
           >
           <Button
             type="warning"
-            :class="{ 'is-disabled': !message }"
+            :class="{ 'is-disabled': !message && !fileList.length }"
             @click="sendFunc"
             >发送</Button
           >
@@ -243,26 +355,110 @@ export default {
     };
   },
   components: {},
-  computed: {},
+  computed: {
+    isHttps() {
+      return window.location.protocol.indexOf("https") > -1;
+    },
+  },
   methods: {
     sendFunc() {
-      let msg = {
-        messageType: 1,
-        toGroupId: "4ddafb1665d2b737eda4b5af5c303dec",
-        messageContent: this.message,
-        fromUserId: "1575001072192",
-        fromUserName: "system",
-        messageSendTime: moment().format("YYYY-MM-DDD HH:mm:ss"),
-        messageId: uuidv4().split("-").join(""),
-      };
-      this.sendMsgHandle(JSON.stringify(msg));
-      let info = {
-        ...msg,
-        status: false,
-        loading: true,
-      };
-      this.datalist.push(info);
-      this.message = "";
+      // messageType
+      // 0: 异常登录
+      // 1: 文本消息(发送自己/接收他人)
+      // 2: 文本消息(响应自己)
+      // 3: Ping消息(发送自己)
+      // 4: Ping消息(响应自己)
+      // 5: 图片消息(发送自己/接收他人)
+      // 6: 图片消息(响应自己)
+      // 7: 文件消息(发送自己/接收他人)
+      // 8: 文件消息(响应自己)
+
+      if (this.message) {
+        let msg = {
+          messageType: 1,
+          toGroupId: "2955206e9abb6abfb14955c9fa7b068b",
+          messageContent: this.message,
+          fromUserId: "1575001072192",
+          fromUserName: "system",
+          messageSendTime: moment().format("YYYY-MM-DDD HH:mm"),
+          messageId: uuidv4().split("-").join(""),
+        };
+        this.sendMsgHandle(JSON.stringify(msg));
+        let info = {
+          ...msg,
+          status: false,
+          loading: true,
+          timerOut: this.setDelay(() => {
+            info.status = false;
+            info.loading = false;
+          }),
+        };
+        this.datalist.push(info);
+        this.message = "";
+      }
+      if (this.fileList.length) {
+        if (this.fileList[0].type.indexOf("image") > -1) {
+          let msg = {
+            messageType: 5,
+            toGroupId: "2955206e9abb6abfb14955c9fa7b068b",
+            fromUserId: "1575001072192",
+            fromUserName: "system",
+            messageSendTime: moment().format("YYYY-MM-DDD HH:mm"),
+            messageId: uuidv4().split("-").join(""),
+            fileId: "bd42a1d9c2b44fa69df5dfd0255ca091",
+          };
+          this.sendMsgHandle(JSON.stringify(msg));
+          let info = {
+            ...msg,
+            status: false,
+            loading: true,
+            fileViewUrl: "",
+            fileViewUrlHttps: "",
+            timerOut: this.setDelay(() => {
+              info.status = false;
+              info.loading = false;
+            }),
+            file: this.fileList[0],
+          };
+          // 使用FileReader来读取文件并生成URL
+          let reader = new FileReader();
+          // 读取文件内容并触发onload事件
+          reader.readAsDataURL(this.fileList[0]);
+          reader.onload = (e) => {
+            // 将生成的URL设置为预览图片的src属性
+            info.fileViewUrlHttps = e.target.result;
+            info.fileViewUrl = e.target.result;
+            this.datalist.push(info);
+          };
+          this.fileList = [];
+        } else {
+          let msg = {
+            messageType: 7,
+            toGroupId: "2955206e9abb6abfb14955c9fa7b068b",
+            fromUserId: "1575001072192",
+            fromUserName: "system",
+            messageSendTime: moment().format("YYYY-MM-DDD HH:mm"),
+            messageId: uuidv4().split("-").join(""),
+            fileId: "bd42a1d9c2b44fa69df5dfd0255ca091",
+            timerOut: this.setDelay(() => {
+              info.status = false;
+              info.loading = false;
+            }),
+            file: this.fileList[0],
+          };
+          this.sendMsgHandle(JSON.stringify(msg));
+          let info = {
+            ...msg,
+            fileDownloadUrl: "",
+            fileDownloadUrlHttps: "",
+            fileName: this.fileList[0].name,
+            status: false,
+            loading: true,
+          };
+          this.datalist.push(info);
+          this.fileList = [];
+        }
+      }
     },
     receiveMessage(msg) {
       // messageType
@@ -271,17 +467,38 @@ export default {
       // 2: 文本消息(响应自己)
       // 3: Ping消息(发送自己)
       // 4: Ping消息(响应自己)
+      // 5: 图片消息(发送自己/接收他人)
+      // 6: 图片消息(响应自己)
+      // 7: 文件消息(发送自己/接收他人)
+      // 8: 文件消息(响应自己)
       let info = JSON.parse(msg);
       if (info.successMark) {
         switch (info.messageType) {
           case 1:
-            this.datalist.push({
+          case 5:
+          case 7:
+            let result = {
               ...info.result,
               status: true,
               loading: false,
-            });
+            };
+            if (result.fileViewUrl) {
+              result.fileViewUrl += `&token=26f9170b-1225-4d3b-9905-ac883ea14f76`;
+            }
+            if (result.fileViewUrlHttps) {
+              result.fileViewUrlHttps += `&token=26f9170b-1225-4d3b-9905-ac883ea14f76`;
+            }
+            if (result.fileDownloadUrl) {
+              result.fileDownloadUrl += `&token=26f9170b-1225-4d3b-9905-ac883ea14f76`;
+            }
+            if (result.fileDownloadUrlHttps) {
+              result.fileDownloadUrlHttps += `&token=26f9170b-1225-4d3b-9905-ac883ea14f76`;
+            }
+            this.datalist.push(result);
             break;
           case 2:
+          case 6:
+          case 8:
             let idx = this.datalist.findIndex(
               (x) => x.messageId === info.requestMessageId
             );
@@ -289,6 +506,17 @@ export default {
               this.datalist[idx].status = true;
               this.datalist[idx].loading = false;
             }
+            if (info.result.fileDownloadUrl) {
+              this.datalist[idx].fileDownloadUrl =
+                info.result.fileDownloadUrl +
+                `&token=26f9170b-1225-4d3b-9905-ac883ea14f76`;
+            }
+            if (info.result.fileDownloadUrlHttps) {
+              this.datalist[idx].fileDownloadUrlHttps =
+                info.result.fileDownloadUrlHttps +
+                `&token=26f9170b-1225-4d3b-9905-ac883ea14f76`;
+            }
+            clearTimeout(this.datalist[idx].timerOut);
             break;
         }
       } else {
@@ -299,6 +527,8 @@ export default {
             this.destroyHandle();
             break;
           case 2:
+          case 6:
+          case 8:
             let idx = this.datalist.findIndex(
               (x) => x.messageId === info.requestMessageId
             );
@@ -306,6 +536,7 @@ export default {
               this.datalist[idx].status = false;
               this.datalist[idx].loading = false;
             }
+            clearTimeout(this.datalist[idx].timerOut);
             break;
         }
       }
@@ -325,9 +556,6 @@ export default {
     handleUpload(file) {
       this.fileList = [file];
       return false;
-    },
-    handleFormatError(file) {
-      this.$Message.warning("请上传格式为jpg、png、jpeg格式的图片");
     },
     createMedia() {
       this.recordLoading = true;
@@ -392,6 +620,30 @@ export default {
         this.$refs.audioPlayer.currentTime = 0;
         this.isAudioPlay = false;
       }
+    },
+    downloadFile(data) {
+      window.open(
+        this.isHttps ? data.fileDownloadUrlHttps : data.fileDownloadUrl
+      );
+    },
+    setDelay(calback) {
+      return setTimeout(() => {
+        calback && calback();
+      }, 2 * 1000);
+    },
+    reSendFunc(data) {
+      if (data.messageType === 1) {
+        this.message = data.messageContent;
+      } else if (data.messageType === 5 || data.messageType === 7) {
+        this.fileList = [data.file];
+      }
+      let idx = this.datalist.findIndex((x) => {
+        return data.messageId === x.messageId;
+      });
+      if (idx > -1) {
+        this.datalist.splice(idx, 1);
+      }
+      this.sendFunc();
     },
   },
   watch: {
@@ -598,6 +850,24 @@ export default {
                 text-align: center;
               }
             }
+            .file-container {
+              width: 245px;
+              box-sizing: border-box;
+              background: #f6f6f6;
+              border: 1px solid #e3e3e3;
+              display: flex;
+              align-items: center;
+              justify-content: space-between;
+              padding: 6px 15px;
+              min-height: 40px;
+              .flie-name {
+                width: 185px;
+                word-break: break-all;
+              }
+              .flie-download {
+                cursor: pointer;
+              }
+            }
             .msg-error {
               position: absolute;
               right: -30px;
@@ -661,6 +931,11 @@ export default {
               //     cursor: pointer;
               //   }
               // }
+            }
+            .self-msg-error,
+            .self-msg-loading {
+              right: auto;
+              left: -30px;
             }
           }
         }
