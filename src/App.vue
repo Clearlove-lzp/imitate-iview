@@ -72,6 +72,7 @@
           <MenuItem name="/baiduMap" to="/baiduMap">百度地图</MenuItem>
           <MenuItem name="/tencentMap" to="/tencentMap">腾讯地图</MenuItem>
           <MenuItem name="/shGis" to="/shGis">上海Gis</MenuItem>
+          <MenuItem name="/heatmap" to="/heatmap">热力图</MenuItem>
           <MenuItem name="/turf" to="/turf">Turf.js</MenuItem>
           <MenuItem name="/positionChange" to="/positionChange"
             >坐标转换</MenuItem
