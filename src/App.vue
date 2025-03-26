@@ -87,6 +87,7 @@
             >表单</MenuItem
           >
         </Submenu>
+        <MenuItem name="/aiChat" to="/aiChat">AI聊天室</MenuItem>
         <div class="userDiv">
           <img class="headImage" :src="require('@/assets/miao.png')" alt="" />
           Lzp

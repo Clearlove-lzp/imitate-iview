@@ -282,13 +282,21 @@
             />
           </span>
         </div>
-        <Input
+        <!-- <Input
           :class="{ 'file-input': fileList.length }"
           type="textarea"
           placeholder="请输入"
           maxlength="1024"
           v-model="message"
-        ></Input>
+        ></Input> -->
+        <div
+          class="content-write"
+          :class="{ 'file-input': fileList.length }"
+          contenteditable="true"
+          @input="onInput"
+          placeholder="请输入"
+          ref="chatInput"
+        ></div>
       </div>
       <div class="footer">
         <div class="footer-left">
@@ -323,6 +331,20 @@
       <source src="@/assets/audio.mp3" type="audio/mp3" />
       Your browser does not support the audio element.
     </audio>
+
+    <!-- @ 提示用户列表 -->
+    <ul v-if="showUserList" class="user-list">
+      <li
+        v-for="(user, index) in users"
+        :key="user.id"
+        @mousedown.prevent="selectUser(user)"
+        :class="{ active: index === selectedIndex }"
+      >
+        {{ user.name }}
+      </li>
+    </ul>
+
+    <div v-html="highlightMention(content)"></div>
   </div>
 </template>
 
@@ -352,6 +374,20 @@ export default {
       isAudioPlay: false,
       isWsOpen: false,
       datalist: [],
+
+      users: [
+        { id: 1, name: "张三" },
+        { id: 2, name: "李四" },
+        { id: 3, name: "王五" },
+      ],
+      showUserList: false,
+      filteredUsers: [],
+      selectedIndex: 0,
+      cursorPosition: 0,
+
+      phone: "13472712400", // 动态值
+      content:
+        'ceshi <span data-p="13472712400" contenteditable="false">@李惠&nbsp;</span> 测试 <span  data-p="9876543210" contenteditable="false">@王五&nbsp;</span>',
     };
   },
   components: {},
@@ -644,6 +680,66 @@ export default {
         this.datalist.splice(idx, 1);
       }
       this.sendFunc();
+    },
+
+    onInput(e) {
+      e.preventDefault();
+      if (e.data === "@") {
+        this.showUserList = true;
+      }
+      // 如果只有 <br>，清空它，防止影响删除
+      if (this.$refs.chatInput.innerHTML === "<br>") {
+        this.$refs.chatInput.innerHTML = "";
+      }
+    },
+
+    selectUser(user) {
+      const chatInput = this.$refs.chatInput;
+      this.$nextTick(() => {
+        chatInput.focus(); // 确保输入框获取焦点
+        const selection = window.getSelection();
+        if (!selection.rangeCount) return;
+
+        const range = selection.getRangeAt(0);
+        const cursorStart = range.startOffset; // 光标起始位置
+        // 获取当前文本节点
+        const textNode = range.startContainer;
+        const currentText = textNode.textContent || "";
+        // 检查光标前是否是 @
+        if (cursorStart > 0 && currentText[cursorStart - 1] === "@") {
+          // 删除光标前的 @
+          range.setStart(textNode, cursorStart - 1); // 设置范围从光标前一个字符开始
+          range.setEnd(textNode, cursorStart); // 设置范围到光标当前位置
+          range.deleteContents(); // 删除范围内的内容
+          // 创建 @[用户名] 节点
+          const mentionNode = document.createElement("span");
+          mentionNode.textContent = `@${user.name}\u00A0`;
+          mentionNode.contentEditable = "false";
+          // 插入 @[用户名]
+          range.insertNode(mentionNode);
+          this.showUserList = false; // 关闭 @ 用户列表
+          // 调整光标位置到插入内容之后
+          range.setStartAfter(mentionNode); // 将光标移到插入内容之后
+          range.collapse(true);
+          selection.removeAllRanges();
+          selection.addRange(range);
+        }
+      });
+    },
+
+    highlightMention(content) {
+      // 创建正则表达式，匹配 data-p="phone"
+      const phonePattern = new RegExp(`data-p="${this.phone}"`, "g");
+
+      // 将匹配到的元素添加 highlight 类
+      const highlightedContent = `<div>${content}</div>`.replace(
+        phonePattern,
+        (match) => {
+          return match.replace(match, `${match} class='hignlight'`);
+        }
+      );
+      console.info(highlightedContent);
+      return highlightedContent;
     },
   },
   watch: {
@@ -1038,5 +1134,47 @@ export default {
 
 .audioPlayer {
   display: none;
+}
+
+.content-write {
+  width: 100%;
+  height: 100%;
+  padding: 5px 15px;
+  border: none;
+  outline: none; /* 取消默认的蓝色高亮框 */
+  &:focus {
+    border: 1px solid #007bff; /* 聚焦时蓝色边框 */
+    box-shadow: 0 0 0 2px rgba(45, 140, 240, 0.2);
+  }
+}
+
+.chat-container {
+  position: relative;
+  width: 300px;
+  border: 1px solid #ccc;
+  padding: 5px;
+  border-radius: 5px;
+}
+.input-box {
+  min-height: 50px;
+  border: none;
+  outline: none;
+  padding: 5px;
+}
+.user-list {
+  position: absolute;
+  background: white;
+  border: 1px solid #ddd;
+  list-style: none;
+  padding: 5px;
+  margin: 0;
+  width: 150px;
+}
+.user-list li {
+  padding: 5px;
+  cursor: pointer;
+}
+.user-list li.active {
+  background: #eee;
 }
 </style>
