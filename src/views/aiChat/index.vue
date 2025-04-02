@@ -2,6 +2,10 @@
 <template>
   <div class="ai-chat">
     <div class="history-list">
+      <div class="new-item">
+        <Icon type="md-add" />
+        <div class="text">新会话</div>
+      </div>
       <div class="history-item">
         <div class="text">机器狗语音设置机器狗语音设置机器狗语音设置</div>
         <div class="icon-box">
@@ -42,7 +46,9 @@
                 backgroundColor: styleSheet.messageBgSun,
               }"
             >
-              Helloo team!😍
+              <div v-for="message in messages" :key="message.id">
+                <Markdown :content="message.content" />
+              </div>
             </div>
           </div>
         </div>
@@ -59,7 +65,9 @@
                 backgroundColor: styleSheet.messageBgSun,
               }"
             >
-              Helloo team!说的是但是 实打实
+              Helloo team!说的是但是 实打实Helloo team!说的是但是 实打实Helloo
+              team!说的是但是 实打实Helloo team!说的是但是 实打实Helloo
+              team!说的是但是 实打实
             </div>
           </div>
         </div>
@@ -150,6 +158,7 @@
 </template>
 
 <script>
+import Markdown from "./Markdown.vue"; // 引入刚刚创建的Markdown组件
 export default {
   props: {},
   data() {
@@ -160,9 +169,28 @@ export default {
         messageSun: "#323640",
         messageBgSun: "#f3f4f9",
       },
+      messages: [
+        {
+          id: 1,
+          content:
+            "**欢迎来到聊天室！**\n\n这是一个支持 `Markdown` 语法的聊天框。\n\n- 你可以使用 **加粗** 文字。\n- 也可以使用 *斜体* 文字。\n- 甚至可以添加 [超链接](https://www.example.com)。\n\n```js\nconsole.log('Hello, Markdown!');\n```\n\n> 这是一个引用块，适用于引用消息。\n\n🌟 试试看，发送带有 Markdown 语法的消息吧！",
+        },
+        {
+          id: 2,
+          content:
+            "## 这是一个二级标题\n你还可以使用标题语法来分隔聊天内容。\n\n---\n\n**Markdown 还支持分割线，让聊天内容更清晰！**",
+        },
+        {
+          id: 3,
+          content:
+            "- [x] 任务 1：学习 Markdown\n- [ ] 任务 2：在聊天中尝试使用它\n\n`任务列表` 也可以很好地展示 TODO 事项！",
+        },
+      ],
     };
   },
-  components: {},
+  components: {
+    Markdown,
+  },
   computed: {},
   methods: {},
   watch: {},
@@ -179,14 +207,36 @@ export default {
   transition: 0.2s;
   display: flex;
   .history-list {
-    width: 200px;
+    width: 240px;
     height: 100%;
-    background-color: #f9f9f9;
+    background-color: #f3f4f6;
     overflow: auto;
+    border-radius: 10px;
+    padding: 10px;
+    .new-item {
+      color: #0057ff;
+      cursor: pointer;
+      padding: 8px 30px 8px 8px;
+      border: 1px solid rgba(0, 102, 255, 0.15);
+      background-color: rgba(0, 87, 255, 0.06);
+      border-radius: 10px;
+      margin-bottom: 5px;
+      display: flex;
+      align-items: center;
+      font-weight: bold;
+      .text {
+        margin-left: 10px;
+      }
+      &:hover {
+        background-color: rgba(0, 87, 255, 0.1);
+      }
+    }
     .history-item {
       padding: 8px 30px 8px 8px;
       cursor: pointer;
       position: relative;
+      border-radius: 10px;
+      margin-bottom: 5px;
       .text {
         width: 100%;
         overflow: hidden;
@@ -197,7 +247,7 @@ export default {
         width: 30px;
         height: 100%;
         right: 0;
-        top: 0;
+        top: 0px;
         line-height: 30px;
         text-align: center;
         font-size: 20px;
@@ -215,7 +265,7 @@ export default {
 }
 
 .smsChart {
-  width: calc(100% - 200px);
+  width: calc(100% - 240px);
   border-radius: 20px;
   .chat-area {
     height: calc(100% - 80px);
@@ -244,7 +294,7 @@ export default {
         .name {
           margin: 0;
           line-height: 16px;
-          font-size: 12px;
+          font-size: 18px;
           font-weight: 700;
           text-align: left;
         }
@@ -252,7 +302,6 @@ export default {
           margin-top: 8px;
           padding: 8px 16px;
           border-radius: 0 12px 12px 12px;
-          font-size: 12px;
           line-height: 16px;
           text-align: left;
           // color: var(--message-text);
