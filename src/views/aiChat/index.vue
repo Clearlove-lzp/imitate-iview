@@ -2,6 +2,10 @@
 <template>
   <div class="ai-chat">
     <div class="history-list">
+      <div class="new-item" @click="onIframe">
+        <Icon type="md-add" />
+        <div class="text">打开嵌套页面</div>
+      </div>
       <div class="new-item">
         <Icon type="md-add" />
         <div class="text">新会话</div>
@@ -154,6 +158,14 @@
         </div>
       </div>
     </div>
+    <Modal v-model="visible" footer-hide width="1250">
+      <iframe
+        src="http://localhost:5173/aiChat"
+        frameborder="0"
+        style="width: 1200px; height: 700px"
+        ref="iframeRef"
+      ></iframe>
+    </Modal>
   </div>
 </template>
 
@@ -186,13 +198,23 @@ export default {
             "- [x] 任务 1：学习 Markdown\n- [ ] 任务 2：在聊天中尝试使用它\n\n`任务列表` 也可以很好地展示 TODO 事项！",
         },
       ],
+      visible: false,
     };
   },
   components: {
     Markdown,
   },
   computed: {},
-  methods: {},
+  methods: {
+    onIframe() {
+      this.visible = true;
+      const iframeWindow = this.$refs.iframeRef?.contentWindow;
+      if (iframeWindow) {
+        console.info(iframeWindow);
+        iframeWindow.postMessage({ token: "0" }, "*");
+      }
+    },
+  },
   watch: {},
   mounted() {},
   created() {},
