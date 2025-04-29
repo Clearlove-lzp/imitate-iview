@@ -56,42 +56,6 @@
             </div>
           </div>
         </div>
-        <div class="message-wrapper">
-          <div class="profile-picture">
-            <img src="@/assets/5.jpg" alt="" />
-          </div>
-          <div class="message-content">
-            <p class="name" :style="{ color: styleSheet.messageSun }">ai</p>
-            <div
-              class="message"
-              :style="{
-                color: styleSheet.messageSun,
-                backgroundColor: styleSheet.messageBgSun,
-              }"
-            >
-              Helloo team!说的是但是 实打实Helloo team!说的是但是 实打实Helloo
-              team!说的是但是 实打实Helloo team!说的是但是 实打实Helloo
-              team!说的是但是 实打实
-            </div>
-          </div>
-        </div>
-        <div class="message-wrapper">
-          <div class="profile-picture">
-            <img src="@/assets/5.jpg" alt="" />
-          </div>
-          <div class="message-content">
-            <p class="name" :style="{ color: styleSheet.messageSun }">ai</p>
-            <div
-              class="message"
-              :style="{
-                color: styleSheet.messageSun,
-                backgroundColor: styleSheet.messageBgSun,
-              }"
-            >
-              Helloo team!说的是但是 实打实
-            </div>
-          </div>
-        </div>
         <div class="message-wrapper reverse">
           <div class="profile-picture">
             <img src="@/assets/5.jpg" alt="" />
@@ -196,6 +160,10 @@ export default {
           id: 3,
           content:
             "- [x] 任务 1：学习 Markdown\n- [ ] 任务 2：在聊天中尝试使用它\n\n`任务列表` 也可以很好地展示 TODO 事项！",
+        },
+        {
+          id: 4,
+          content: "<img src=d onerror=alert(123)></img>11",
         },
       ],
       visible: false,

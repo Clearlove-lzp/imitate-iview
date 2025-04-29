@@ -18,6 +18,7 @@
     "cropperjs": "^1.5.12",
     "crypto-js": "^4.0.0",
     "custom-json2excel": "^2.0.0",
+    "dompurify": "^3.2.5",
     "echarts": "^4.2.0-rc.1",
     "element-ui": "^2.15.2",
     "leaflet": "^1.9.4",

@@ -5,6 +5,7 @@
 <script setup>
 import MarkdownIt from "markdown-it";
 import { ref, onMounted, watch } from "vue";
+import DOMPurify from "dompurify";
 
 const props = defineProps(["content"]);
 
@@ -60,19 +61,22 @@ const renderMarkdown = () => {
   let rendered = md
     .render(props.content)
     .replaceAll("<table>", '<table class="chat-table">');
-  renderedContent.value = addEllipsisToTable(rendered);
+  // 先加省略号处理
+  rendered = addEllipsisToTable(rendered);
+  // 再进行XSS清洗
+  renderedContent.value = DOMPurify.sanitize(rendered);
 };
 
 onMounted(() => {
-  renderMarkdown();
+  if (props.content) {
+    renderMarkdown();
+  }
 });
 
 watch(
   () => props.content,
-  (value) => {
-    if (value) {
-      renderMarkdown();
-    }
+  (newContent) => {
+    if (newContent) renderMarkdown();
   }
 );
 </script>
