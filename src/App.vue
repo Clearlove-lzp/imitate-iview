@@ -49,6 +49,7 @@
           <MenuItem name="/videoPlay" to="/videoPlay">rtmp流视频</MenuItem>
           <MenuItem name="/canvasStep" to="/canvasStep">canvas流程图</MenuItem>
           <MenuItem name="/vxeTable" to="/vxeTable">vxeTable</MenuItem>
+          <MenuItem name="/amrTest" to="/amrTest">amr调试</MenuItem>
         </Submenu>
         <Submenu name="3">
           <template slot="title">
