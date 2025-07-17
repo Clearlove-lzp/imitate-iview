@@ -37,7 +37,7 @@ export default {
       const blob = this.base64ToBlob(this.base64Str, "audio/amr");
       await this.amr.initWithBlob(blob);
       this.duration = this.amr.getDuration();
-
+      console.info(this.duration);
       this.amr.onEnded(() => {
         this.isPlaying = false;
         this.progress = 0;
@@ -82,7 +82,7 @@ export default {
         this.amr.stop();
         this.isPlaying = false;
       } else {
-        this.playAudio();
+        this.initPlayer().then(() => this.playAudio());
       }
     },
     playAudio() {
