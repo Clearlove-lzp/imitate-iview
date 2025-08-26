@@ -379,6 +379,17 @@ const routes = [
     component: () =>
       import(/* webpackChunkName: "amrTest" */ "../views/amrTest/index.vue"),
   },
+  {
+    path: "/heMediaNew",
+    name: "heMediaNew",
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () =>
+      import(
+        /* webpackChunkName: "heMediaNew" */ "../views/heMediaNew/index.vue"
+      ),
+  },
 ];
 
 const router = new VueRouter({

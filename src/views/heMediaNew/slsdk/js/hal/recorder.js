@@ -1,0 +1,1 @@
+import{AudioDspStartRecord,AudioDspStopRecord}from"./audio_dsp";var Recorder=function(o){};Recorder.prototype.start=function(o){console.log("Recorder start"),AudioDspStartRecord(o)},Recorder.prototype.stop=function(){console.log("Recorder stop"),AudioDspStopRecord()};export default Recorder;

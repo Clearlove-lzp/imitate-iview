@@ -1,0 +1,1 @@
+var Tts=function(t){this.notify_cb=t};export default Tts;

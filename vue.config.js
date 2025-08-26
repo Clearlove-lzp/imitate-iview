@@ -10,7 +10,7 @@ module.exports = {
   // cli3 代理是从指定的target后面开始匹配的，不是任意位置；配置pathRewrite可以做替换
   productionSourceMap: process.env.NODE_ENV == "development" ? true : false, // 如果你不需要生产环境的 source map，可以将其设置为 false 以加速生产环境构建。开启productionSourceMap后，浏览器控制台明确的告诉我们test这条结果的输出语句在main.js的20行。这就是source map的作用，对于开发人员差错时非常有用的。
   devServer: {
-    port: 8080, // 设置端口号,
+    port: 8090, // 设置端口号,
     host: "localhost",
     open: true, //配置自动启动浏览器
     proxy: {

@@ -64,6 +64,7 @@
           <MenuItem name="/palette" to="/palette">共享画板</MenuItem>
           <MenuItem name="/warRoom" to="/warRoom">作战室</MenuItem>
           <MenuItem name="/Websocket" to="/Websocket">Websocket</MenuItem>
+          <MenuItem name="/heMediaNew" to="/heMediaNew">和对讲去插件</MenuItem>
         </Submenu>
         <Submenu name="4">
           <template slot="title">

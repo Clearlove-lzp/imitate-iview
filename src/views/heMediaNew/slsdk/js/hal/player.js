@@ -1,0 +1,1 @@
+var Player=function(o){this.notify_cb=o};Player.prototype.start=function(o){console.log("Player start"),AudioDspStartPlay(o)},Player.prototype.stop=function(){console.log("Player stop"),AudioDspStopPlay()};export default Player;
