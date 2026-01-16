@@ -50,6 +50,7 @@
           <MenuItem name="/canvasStep" to="/canvasStep">canvas流程图</MenuItem>
           <MenuItem name="/vxeTable" to="/vxeTable">vxeTable</MenuItem>
           <MenuItem name="/amrTest" to="/amrTest">amr调试</MenuItem>
+          <MenuItem name="/Zrender" to="/Zrender">Zrender</MenuItem>
         </Submenu>
         <Submenu name="3">
           <template slot="title">

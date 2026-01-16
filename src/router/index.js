@@ -390,6 +390,15 @@ const routes = [
         /* webpackChunkName: "heMediaNew" */ "../views/heMediaNew/index.vue"
       ),
   },
+  {
+    path: "/Zrender",
+    name: "Zrender",
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () =>
+      import(/* webpackChunkName: "Zrender" */ "../views/Zrender/index.vue"),
+  },
 ];
 
 const router = new VueRouter({
