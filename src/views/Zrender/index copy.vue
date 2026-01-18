@@ -24,24 +24,6 @@
 <script>
 import * as zrender from "zrender";
 
-// 4种状态：0 未开始、1 处理中、2 已完成、3 任务驳回；不同状态不同颜色
-const notStartedStatus = {
-  bg: "#FFFFFF",
-  roleBg: "#A0A2AA",
-};
-const processingStatus = {
-  bg: "#F1F9FF",
-  roleBg: "#2396F5",
-};
-const completeStatus = {
-  bg: "#EFFFF0",
-  roleBg: "#26BE2A",
-};
-const rejectedStatus = {
-  bg: "#FFF1F0",
-  roleBg: "#FF4D4F",
-};
-
 // 原始流程图数据
 const ORIGINAL_FLOW_DATA = {
   nodes: [
@@ -50,85 +32,90 @@ const ORIGINAL_FLOW_DATA = {
       x: 50,
       y: 180,
       text: "事件生成",
-      role: "监控",
+      bg: "#d9f7be",
+      dept: "监控",
       time: "10:00",
       userName: "张三",
       userDept: "省监控",
-      status: 2,
+      deptBg: "#28C768",
     },
     {
       id: "confirm",
       x: 300,
-      y: 60,
+      y: 100,
       text: "真实性确认",
-      role: "专业",
+      bg: "#d9f7be",
+      dept: "专业",
       time: "10:00",
       userName: "张三",
       userDept: "省监控",
+      deptBg: "#28C768",
       from: [
         { fromId: "eventGen", fromPoint: "right", triggerDirection: "right" },
       ],
-      status: 2,
     },
     {
       id: "rootCause",
       x: 300,
       y: 180,
       text: "根因初定界",
-      role: "监控",
+      bg: "#d9f7be",
+      dept: "监控",
       time: "10:00",
       userName: "张三",
       userDept: "省监控",
+      deptBg: "#28C768",
       from: [
         { fromId: "eventGen", fromPoint: "right", triggerDirection: "right" },
       ],
-      rejectFrom: [
-        { fromId: "rootConfirm", fromPoint: "up", triggerDirection: "down" },
-      ],
-      status: 2,
     },
     {
       id: "impact",
       x: 300,
-      y: 300,
+      y: 260,
       text: "影响初定界",
-      role: "监控",
+      bg: "#d9f7be",
+      dept: "监控",
       time: "10:00",
       userName: "张三",
       userDept: "省监控",
+      deptBg: "#28C768",
       from: [
         { fromId: "eventGen", fromPoint: "right", triggerDirection: "right" },
       ],
-      status: 2,
     },
     {
       id: "rootConfirm",
       x: 490,
       y: 180,
       text: "根因定界确认",
-      role: "专业",
+      bg: "#66B2FF",
+      dept: "专业",
+      deptBg: "#0677FB",
       from: [
         { fromId: "rootCause", fromPoint: "right", triggerDirection: "right" },
       ],
-      status: 3,
     },
     {
       id: "impactConfirm",
       x: 490,
-      y: 300,
+      y: 260,
       text: "影响定界确认",
-      role: "专业",
+      bg: "#FF6262",
+      dept: "专业",
+      deptBg: "#B50000",
       from: [
         { fromId: "impact", fromPoint: "right", triggerDirection: "right" },
       ],
-      status: 1,
     },
     {
       id: "impactSum",
       x: 680,
-      y: 300,
+      y: 260,
       text: "影响汇总",
-      role: "监控",
+      bg: "#E0E0E0",
+      dept: "监控",
+      deptBg: "#959595",
       from: [
         {
           fromId: "impactConfirm",
@@ -136,14 +123,15 @@ const ORIGINAL_FLOW_DATA = {
           triggerDirection: "right",
         },
       ],
-      status: 0,
     },
     {
       id: "rootHandle",
       x: 920,
       y: 180,
       text: "根因定位处理",
-      role: "专业",
+      bg: "#E0E0E0",
+      dept: "专业",
+      deptBg: "#959595",
       from: [
         {
           fromId: "rootConfirm",
@@ -151,14 +139,15 @@ const ORIGINAL_FLOW_DATA = {
           triggerDirection: "right",
         },
       ],
-      status: 0,
     },
     {
       id: "impactHandle",
       x: 920,
-      y: 300,
+      y: 260,
       text: "影响核实处理",
-      role: "专业",
+      bg: "#E0E0E0",
+      dept: "专业",
+      deptBg: "#959595",
       from: [
         {
           fromId: "impactSum",
@@ -166,14 +155,15 @@ const ORIGINAL_FLOW_DATA = {
           triggerDirection: "right",
         },
       ],
-      status: 0,
     },
     {
       id: "recover",
       x: 1150,
       y: 180,
       text: "恢复验证",
-      role: "监控",
+      bg: "#E0E0E0",
+      dept: "监控",
+      deptBg: "#959595",
       from: [
         {
           fromId: "impactHandle",
@@ -186,14 +176,15 @@ const ORIGINAL_FLOW_DATA = {
           triggerDirection: "right",
         },
       ],
-      status: 0,
     },
     {
       id: "close",
       x: 1150,
-      y: 60,
+      y: 100,
       text: "事件闭环",
-      role: "监控",
+      bg: "#E0E0E0",
+      dept: "监控",
+      deptBg: "#959595",
       from: [
         {
           fromId: "recover",
@@ -201,26 +192,10 @@ const ORIGINAL_FLOW_DATA = {
           triggerDirection: "up",
         },
       ],
-      status: 0,
-    },
-    {
-      id: "over",
-      x: 1390,
-      y: 180,
-      text: "结束",
-      from: [
-        {
-          fromId: "recover",
-          fromPoint: "right",
-          triggerDirection: "right",
-        },
-      ],
-      status: 0,
     },
   ],
   rectWidth: 140,
-  rectHeight: 90,
-  spaceHeight: 30,
+  rectHeight: 50,
 };
 
 export default {
@@ -252,32 +227,12 @@ export default {
         container.clientHeight
       );
     },
+
     // 绘制节点
     drawNode(node) {
       const { rectWidth, rectHeight } = this.flowData;
-      const bg =
-        node.status === 0
-          ? notStartedStatus.bg
-          : node.status === 1
-          ? processingStatus.bg
-          : node.status === 2
-          ? completeStatus.bg
-          : node.status === 3
-          ? rejectedStatus.bg
-          : "";
-      const roleBg =
-        node.status === 0
-          ? notStartedStatus.roleBg
-          : node.status === 1
-          ? processingStatus.roleBg
-          : node.status === 2
-          ? completeStatus.roleBg
-          : node.status === 3
-          ? rejectedStatus.roleBg
-          : "";
       // 节点矩形
       const rect = new zrender.Rect({
-        id: node.id,
         shape: {
           x: node.x,
           y: node.y,
@@ -286,9 +241,13 @@ export default {
           r: 6,
         },
         style: {
-          fill: bg,
-          stroke: roleBg,
+          fill: node.bg,
           lineWidth: 2,
+          // 阴影核心配置（以下4项配合使用）
+          shadowBlur: 10, // 阴影模糊度（越大越柔和）
+          shadowColor: "rgba(0,0,0,0.3)", // 阴影颜色（带透明度更自然）
+          shadowOffsetX: 3, // 阴影水平偏移（向右为正）
+          shadowOffsetY: 3, // 阴影垂直偏移（向下为正）
         },
         z: 1,
       });
@@ -301,24 +260,17 @@ export default {
         // 2. 节点高亮（取消之前选中节点的高亮）
         Object.keys(this.nodeElements).forEach((id) => {
           const el = this.nodeElements[id];
-          if (id === node.id) {
-            // 高亮当前选中节点
-            el.attr("style", {
-              ...el.attr("style"),
-              shadowBlur: 10, // 悬浮时阴影更明显
-              shadowColor: `${roleBg}80`, // 阴影
-              lineWidth: 3,
-            });
-          } else {
-            el.attr("style", {
-              ...el.attr("style"),
-              shadowBlur: 0,
-              shadowOffsetX: 0,
-              shadowOffsetY: 0,
-              shadowColor: "transparent",
-              lineWidth: 2,
-            });
-          }
+          el.attr("style", {
+            ...el.attr("style"),
+            stroke: null,
+            lineWidth: 2,
+          });
+        });
+        // 高亮当前选中节点
+        rect.attr("style", {
+          ...rect.attr("style"),
+          stroke: "#1890ff", // 蓝色高亮边框
+          lineWidth: 3,
         });
       });
 
@@ -326,9 +278,8 @@ export default {
       rect.on("mouseover", () => {
         rect.attr("style", {
           ...rect.attr("style"),
-          shadowBlur: 10, // 悬浮时阴影更明显
-          shadowColor: `${roleBg}80`, // 阴影
-          lineWidth: 3,
+          shadowBlur: 15, // 悬浮时阴影更明显
+          shadowColor: "rgba(24, 144, 255, 0.4)", // 蓝色阴影
         });
       });
       rect.on("mouseout", () => {
@@ -336,11 +287,8 @@ export default {
         if (this.selectedNode !== node.id) {
           rect.attr("style", {
             ...rect.attr("style"),
-            shadowBlur: 0,
-            shadowOffsetX: 0,
-            shadowOffsetY: 0,
-            shadowColor: "transparent",
-            lineWidth: 2,
+            shadowBlur: 10,
+            shadowColor: "rgba(0,0,0,0.3)",
           });
         }
       });
@@ -348,79 +296,68 @@ export default {
       // 存储节点元素，用于后续交互
       this.nodeElements[node.id] = rect;
 
-      if (node.role) {
-        // 节点部门 - 矩形
-        const roleRect = new zrender.Rect({
-          shape: {
-            x: node.x + 7,
-            y: node.y - 7,
-            width: 40,
-            height: 20,
-            r: 4,
-          },
-          style: {
-            fill: roleBg,
-          },
-          z: 2,
-          silent: true, // 事件穿透
-        });
-        this.zr.add(roleRect);
-        // 节点部门 - 文本
-        const roleText = new zrender.Text({
-          style: {
-            text: node.role,
-            fontSize: 14,
-            fill: "#fff",
-            x: node.x + 12,
-            y: node.y - 4,
-          },
-          z: 3,
-          silent: true, // 事件穿透
-        });
-        this.zr.add(roleText);
-      }
+      // 节点部门 - 矩形
+      const deptRect = new zrender.Rect({
+        shape: {
+          x: node.x + 5,
+          y: node.y + 5,
+          width: 32,
+          height: 17,
+          r: 4,
+        },
+        style: {
+          fill: node.deptBg,
+        },
+        z: 2,
+        silent: true, // 事件穿透
+      });
+      this.zr.add(deptRect);
+
+      // 节点部门 - 文本
+      const deptText = new zrender.Text({
+        style: {
+          text: node.dept,
+          fontSize: 13,
+          fill: "#fff",
+          x: node.x + 8,
+          y: node.y + 7,
+        },
+        z: 3,
+        silent: true, // 事件穿透
+      });
+      this.zr.add(deptText);
 
       // 节点文本
       const text = new zrender.Text({
         style: {
           text: node.text,
-          fontSize: 16,
-          fill: "#000",
-          x: node.x + rectWidth / 2,
+          fontSize: 13,
+          fill: "#334044",
+          x: node.x + 50,
           y:
             node.time || node.userName || node.userDept
-              ? node.y + 20
-              : node.y + 40,
+              ? node.y + 7
+              : node.y + 20,
         },
         z: 2,
-        silent: true,
+        silent: true, // 事件穿透
       });
       this.zr.add(text);
-      const textBound = text.getBoundingRect();
-      // 反算真正的“视觉居中”
-      text.attr("style", {
-        x: textBound.x - textBound.width / 2,
-      });
 
       // 节点时间 - 文本
       if (node.time) {
         const timeText = new zrender.Text({
           style: {
             text: node.time,
-            fontSize: 14,
+            fontSize: 12,
             fill: "#334044",
-            x: node.x + rectWidth / 2,
-            y: node.y + 65,
+            x: node.x + 5,
+            y: node.y + 34,
           },
           z: 2,
           silent: true, // 事件穿透
         });
         this.zr.add(timeText);
-        const timeTextBound = timeText.getBoundingRect();
-        // 反算真正的“视觉居中”
-        timeText.attr("style", {
-          x: timeTextBound.x - timeTextBound.width / 2,
-        });
       }
 
       // 节点填写信息 - 文本
@@ -428,35 +365,20 @@ export default {
         const infoText = new zrender.Text({
           style: {
             text: `${node.userName}-${node.userDept}`,
-            fontSize: 14,
+            fontSize: 12,
             fill: "#334044",
-            x: node.x + rectWidth / 2,
-            y: node.y + 45,
+            x: node.x + 70,
+            y: node.y + 34,
           },
           z: 2,
           silent: true, // 事件穿透
         });
         this.zr.add(infoText);
-        const infoTextBound = infoText.getBoundingRect();
-        // 反算真正的“视觉居中”
-        infoText.attr("style", {
-          x: infoTextBound.x - infoTextBound.width / 2,
-        });
       }
     },
+
     // 绘制连线 + 箭头（核心修复）
     drawLine(fromNode, toNode, fromInfo) {
-      // console.info(fromNode, toNode, fromInfo);
-      const lineColor =
-        fromNode.status === 0
-          ? notStartedStatus.roleBg
-          : fromNode.status === 1
-          ? notStartedStatus.roleBg
-          : fromNode.status === 2
-          ? completeStatus.roleBg
-          : fromNode.status === 3
-          ? notStartedStatus.roleBg
-          : "";
       // 绘制起点的圆
       if (fromInfo.fromPoint === "right") {
         const circle = new zrender.Circle({
@@ -466,7 +388,7 @@ export default {
             r: 4,
           },
           style: {
-            fill: lineColor,
+            fill: "#28C768",
           },
         });
         this.zr.add(circle);
@@ -478,7 +400,7 @@ export default {
             r: 4,
           },
           style: {
-            fill: lineColor,
+            fill: "#28C768",
           },
         });
         this.zr.add(circle);
@@ -495,7 +417,7 @@ export default {
             points: trianglePoints,
           },
           style: {
-            fill: lineColor,
+            fill: "#28C768",
           },
         });
         this.zr.add(triangle);
@@ -522,7 +444,7 @@ export default {
               points: polylinePoints,
             },
             style: {
-              stroke: lineColor,
+              stroke: "#28C768",
               lineWidth: 2,
             },
           });
@@ -536,7 +458,7 @@ export default {
               x2: toNode.x - 10,
               y2: toNode.y + this.flowData.rectHeight / 2,
             },
-            style: { stroke: lineColor, lineWidth: 2, fill: "none" },
+            style: { stroke: "#28C768", lineWidth: 2, fill: "none" },
           });
           this.zr.add(line);
         }
@@ -561,7 +483,7 @@ export default {
             points: trianglePoints,
           },
           style: {
-            fill: lineColor,
+            fill: "#28C768",
           },
         });
         this.zr.add(triangle);
@@ -587,7 +509,7 @@ export default {
               points: polylinePoints,
             },
             style: {
-              stroke: lineColor,
+              stroke: "#28C768",
               lineWidth: 2,
             },
           });
@@ -600,85 +522,10 @@ export default {
               x2: toNode.x + this.flowData.rectWidth / 2,
               y2: toNode.y + this.flowData.rectHeight + 2,
             },
-            style: { stroke: lineColor, lineWidth: 2, fill: "none" },
+            style: { stroke: "#28C768", lineWidth: 2, fill: "none" },
           });
           this.zr.add(line);
         }
-      }
-    },
-    // 绘制驳回连线 + 箭头
-    drawRejectLine(fromNode, toNode, fromInfo) {
-      console.info(fromNode, toNode, fromInfo);
-      const lineColor = rejectedStatus.roleBg;
-      // 绘制起点的圆
-      if (fromInfo.fromPoint === "up") {
-        const circle = new zrender.Circle({
-          shape: {
-            cx: fromNode.x + this.flowData.rectWidth / 2,
-            cy: fromNode.y - 4,
-            r: 4,
-          },
-          style: {
-            fill: lineColor,
-          },
-        });
-        this.zr.add(circle);
-      }
-      if (fromInfo.triggerDirection === "down") {
-        // 绘制终点的三角形
-        const trianglePoints = [
-          [toNode.x + this.flowData.rectWidth / 2, toNode.y], // 尖点
-          [toNode.x + this.flowData.rectWidth / 2 - 6, toNode.y - 12], // 左底点
-          [toNode.x + this.flowData.rectWidth / 2 + 6, toNode.y - 12], // 右底点
-        ];
-        const triangle = new zrender.Polygon({
-          shape: {
-            points: trianglePoints,
-          },
-          style: {
-            fill: lineColor,
-          },
-        });
-        this.zr.add(triangle);
-      }
-      // 绘制连线折现
-      if (fromInfo.fromPoint === "up" && fromInfo.triggerDirection === "down") {
-        const polylinePoints = [
-          [fromNode.x + this.flowData.rectWidth / 2, fromNode.y - 4], // 起点）
-          [fromNode.x + this.flowData.rectWidth / 2, fromNode.y - 17], // 拐点1（水平上移）
-          [toNode.x + this.flowData.rectWidth / 2, fromNode.y - 17], // 拐点2（水平上移）
-          [toNode.x + this.flowData.rectWidth / 2, toNode.y], // 终点
-        ];
-        const polyline = new zrender.Polyline({
-          shape: {
-            points: polylinePoints,
-          },
-          style: {
-            stroke: lineColor,
-            lineWidth: 2,
-            lineDash: [2, 2],
-          },
-        });
-        this.zr.add(polyline);
-      }
-      // 绘制驳回文字
-      if (fromInfo.fromPoint === "up" && fromInfo.triggerDirection === "down") {
-        // 节点文本
-        const text = new zrender.Text({
-          style: {
-            text: "驳回",
-            fontSize: 14,
-            fill: lineColor,
-            x: (fromNode.x + toNode.x) / 2 + this.flowData.rectWidth / 2 - 10,
-            y: fromNode.y - 35,
-          },
-        });
-        this.zr.add(text);
-        // const textBound = text.getBoundingRect();
-        // // 反算真正的“视觉居中”
-        // text.attr("style", {
-        //   x: textBound.x - textBound.width / 2,
-        // });
       }
     },
     // 渲染整个流程图
@@ -694,14 +541,6 @@ export default {
               (n) => n.id === fromInfo.fromId
             );
             if (fromNode) this.drawLine(fromNode, node, fromInfo);
-          });
-        }
-        if (node.rejectFrom?.length) {
-          node.rejectFrom.find((fromInfo) => {
-            const fromNode = this.flowData.nodes.find(
-              (n) => n.id === fromInfo.fromId
-            );
-            if (fromNode) this.drawRejectLine(fromNode, node, fromInfo);
           });
         }
       });
@@ -771,7 +610,7 @@ export default {
 }
 .flow-container {
   width: 1580px;
-  height: 550px;
+  height: 400px;
   margin: 20px auto;
   border: 1px solid #ccc;
   background-color: #ffffff;
