@@ -30,8 +30,7 @@
     </div>
 
     <div style="text-align: center; margin: 20px">
-      <Button
-        type="primary"
+      <button
         @click="
           () => {
             count++;
@@ -41,92 +40,23 @@
         style="margin-right: 10px"
       >
         增加
-      </Button>
-      <Button @click="reRenderFull" type="primary"
-        >清空重绘（恢复原始数据）</Button
-      >
+      </button>
+      <button @click="reRenderFull">清空重绘（恢复原始数据）</button>
     </div>
 
-    <div class="process-detail">
+    <!-- <div class="process-detail">
       <div class="detail-title">
-        <div class="icon">
-          <Icon type="md-list-box" class="iconfont" color="#FFFFFF" size="20" />
-        </div>
+        <div class="icon"></div>
         <div class="title">根因初定界</div>
         <div class="tip">
           说明：表征专业响应调度，确认事件真实性，并反馈已知事件信息如根因、措施等
         </div>
-        <Icon type="md-alarm" size="20" class="icon-time" />
-        <div class="clock">05:23:32</div>
-        <div class="supervisor‌">
-          <Button icon="md-hammer" type="primary">督办</Button>
-        </div>
+        <div class="clock"></div>
+        <div class="supervisor‌"></div>
+        s
       </div>
-      <div class="detail-main">
-        <div class="detail">
-          <div class="last-process-detail">
-            <div class="detail-item title">上一环节 - 【真实性确认】</div>
-            <div class="detail-item time">2025-12-25 12:00:00 金佳-省公司</div>
-            <div class="detail-item">事件真实性：是</div>
-            <div class="detail-item">表征专业：传输；无线</div>
-            <div class="detail-item">表征专业处理方：传输组</div>
-          </div>
-          <div class="reject-detail">
-            <div class="detail-item title">
-              <span class="reject">驳回信息</span> - 【根因定界确认】
-            </div>
-            <div class="detail-item time">
-              2025-12-25 12:00:00 张三-宁波传动中心
-            </div>
-            <div class="detail-item">根因定界确认结果：驳回</div>
-            <div class="detail-item long">
-              根因确认说明：根因初定界结果需要进一步核实，建议重新评估根因专业
-            </div>
-          </div>
-          <div class="assistant-info">
-            <Collapse>
-              <Panel name="1">
-                其他辅助信息
-                <div slot="content" class="assistant-detail">
-                  <div class="detail-item long title">原子能力名称</div>
-                  <div class="detail-item long">事件标题：标题</div>
-                  <div class="detail-item long">故障类型：类型</div>
-                  <div class="detail-item long">事件级别：四级</div>
-                </div>
-              </Panel>
-            </Collapse>
-          </div>
-        </div>
-        <div class="submit-form">
-          <Form
-            ref="formValidate"
-            :model="AppliForm"
-            :rules="ruleValidate"
-            :label-width="140"
-          >
-            <FormItem label="初定界根因专业" prop="profession">
-              <Input v-model="AppliForm.profession" clearable></Input>
-            </FormItem>
-            <FormItem label="根因定界说明" prop="tip">
-              <Input v-model="AppliForm.tip" type="textarea" clearable></Input>
-            </FormItem>
-            <FormItem label="根因专业处理方" prop="handler">
-              <Select v-model="AppliForm.handler" clearable>
-                <Option value="beijing">New York</Option>
-                <Option value="shanghai">London</Option>
-                <Option value="shenzhen">Sydney</Option>
-              </Select>
-            </FormItem>
-          </Form>
-          <div class="submit-btn">
-            <Button>保存</Button>
-            <Button type="primary" style="margin-left: 10px"
-              >提交进入下一环节</Button
-            >
-          </div>
-        </div>
-      </div>
-    </div>
+      <div class="detail-main"></div>
+    </div> -->
   </div>
 </template>
 
@@ -339,16 +269,6 @@ export default {
       nodeElements: {}, // 存储所有节点元素，用于高亮/交互
       mainHeight: 450,
       count: 1,
-      AppliForm: {
-        profession: "",
-        tip: "",
-        handler: "",
-      },
-      ruleValidate: {
-        profession: [{ required: true, message: "不能为空", trigger: "blur" }],
-        tip: [{ required: true, message: "不能为空", trigger: "blur" }],
-        handler: [{ required: true, message: "不能为空", trigger: "change" }],
-      },
     };
   },
   mounted() {
@@ -989,149 +909,24 @@ export default {
 .flow-container {
   width: 1580px;
   margin: 20px auto;
+  border: 1px solid #ccc;
   background-color: #ffffff;
   overflow: hidden;
+}
+button {
+  padding: 10px 20px;
+  background-color: #1890ff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+button:hover {
+  background-color: #40a9ff;
 }
 
 .process-detail {
   padding: 23px 29px;
-  .detail-title {
-    display: flex;
-    align-items: center;
-    margin-bottom: 10px;
-    .icon {
-      width: 30px;
-      height: 30px;
-      background-color: #26be2a;
-      border-radius: 50%;
-      text-align: center;
-      line-height: 30px;
-      .iconfont {
-        padding-top: 4px;
-      }
-    }
-    .title {
-      color: #262626;
-      font-size: 16px;
-      font-weight: bold;
-      margin-left: 15px;
-    }
-    .tip {
-      width: calc(100% - 350px);
-      color: #909090;
-      margin-left: 25px;
-    }
-    .icon-time {
-      color: #ff9918;
-      margin-right: 5px;
-    }
-    .clock {
-      color: #ff9918;
-    }
-    .supervisor‌ {
-      margin-left: 20px;
-    }
-  }
-  .detail-main {
-    display: flex;
-    .detail {
-      width: 50%;
-      height: 240px;
-      overflow: auto;
-      .last-process-detail {
-        padding: 0 15px;
-        background-color: #effff0;
-        display: flex;
-        flex-wrap: wrap;
-        margin-bottom: 10px;
-        .detail-item {
-          width: 50%;
-          padding: 5px 10px;
-        }
-        .title {
-          color: #262626;
-          font-size: 16px;
-          font-weight: bold;
-        }
-        .time {
-          color: #26be2a;
-        }
-      }
-      .reject-detail {
-        padding: 0 15px;
-        background-color: #fff2f3;
-        display: flex;
-        flex-wrap: wrap;
-        .detail-item {
-          width: 50%;
-          padding: 5px 10px;
-        }
-        .long {
-          width: 100%;
-        }
-        .title {
-          color: #262626;
-          font-size: 16px;
-          font-weight: bold;
-          .reject {
-            color: #f93a4a;
-          }
-        }
-        .time {
-          color: #26be2a;
-        }
-      }
-      .assistant-info {
-        .ivu-collapse {
-          border: 0;
-          background-color: #fff;
-          .ivu-collapse-item {
-            /deep/.ivu-collapse-header {
-              border-bottom: 0;
-              padding-left: 5px;
-              color: #262626;
-              font-size: 16px;
-              font-weight: bold;
-              .ivu-icon-ios-arrow-forward {
-                margin-right: 0;
-              }
-            }
-            /deep/ .ivu-collapse-content {
-              padding: 0;
-              .ivu-collapse-content-box {
-                padding: 0;
-              }
-            }
-          }
-        }
-        .assistant-detail {
-          padding: 0 15px;
-          background-color: #f8f9fa;
-          display: flex;
-          flex-wrap: wrap;
-          .detail-item {
-            width: 50%;
-            padding: 5px 10px;
-          }
-          .title {
-            color: #262626;
-            font-weight: bold;
-          }
-          .long {
-            width: 100%;
-          }
-        }
-      }
-    }
-    .submit-form {
-      width: 50%;
-      height: 240px;
-      overflow: auto;
-      padding: 0 10px;
-      .submit-btn {
-        text-align: center;
-      }
-    }
-  }
 }
 </style>
