@@ -1,28 +1,14 @@
 <template>
   <div class="process-container">
     <div class="process-main">
-      <div class="process-item complete">
-        <div class="step-content">发现</div>
-      </div>
-      <div class="process-item process-bound">
-        <div class="step-content">定界</div>
-      </div>
-      <div class="process-item">
-        <div class="step-content">处置</div>
-      </div>
-      <div class="process-item">
-        <div class="step-content">恢复</div>
-      </div>
-      <div class="process-item">
-        <div class="step-content">复核</div>
-      </div>
+      <div class="process-item complete">发现</div>
+      <div class="process-item process-bound">定界</div>
+      <div class="process-item">处置</div>
+      <div class="process-item">恢复</div>
+      <div class="process-item">复核</div>
     </div>
     <div class="flow-main">
-      <div
-        ref="flowContainer"
-        class="flow-container"
-        :style="{ height: `${mainHeight}px` }"
-      ></div>
+      <div ref="flowContainer" class="flow-container"></div>
       <div class="line line1"></div>
       <div class="line line2"></div>
       <div class="line line3"></div>
@@ -30,33 +16,8 @@
     </div>
 
     <div style="text-align: center; margin: 20px">
-      <button
-        @click="
-          () => {
-            count++;
-            init();
-          }
-        "
-        style="margin-right: 10px"
-      >
-        增加
-      </button>
       <button @click="reRenderFull">清空重绘（恢复原始数据）</button>
     </div>
-
-    <!-- <div class="process-detail">
-      <div class="detail-title">
-        <div class="icon"></div>
-        <div class="title">根因初定界</div>
-        <div class="tip">
-          说明：表征专业响应调度，确认事件真实性，并反馈已知事件信息如根因、措施等
-        </div>
-        <div class="clock"></div>
-        <div class="supervisor‌"></div>
-        s
-      </div>
-      <div class="detail-main"></div>
-    </div> -->
   </div>
 </template>
 
@@ -82,182 +43,185 @@ const rejectedStatus = {
 };
 
 // 原始流程图数据
-const rectWidth = 140; // 节点宽度
-const rectHeight = 90; // 节点高度
-const spaceHeight = 30; // 节点上下间距高度
-const initHeight = 180; // 初始高度（第一个节点的y值）
-const ORIGINAL_FLOW_DATA = [
-  {
-    id: "eventGen",
-    x: 50,
-    y: initHeight,
-    text: "事件生成",
-    role: "监控",
-    time: "10:00",
-    userName: "张三",
-    userDept: "省监控",
-    status: 2,
-  },
-  {
-    id: "confirm",
-    x: 300,
-    y: initHeight - rectHeight - spaceHeight,
-    text: "真实性确认",
-    role: "专业",
-    time: "10:00",
-    userName: "张三",
-    userDept: "省监控",
-    from: [
-      { fromId: "eventGen", fromPoint: "right", triggerDirection: "right" },
-    ],
-    status: 2,
-  },
-  {
-    id: "rootCause",
-    x: 300,
-    y: initHeight,
-    text: "根因初定界",
-    role: "监控",
-    time: "10:00",
-    userName: "张三",
-    userDept: "省监控",
-    from: [
-      { fromId: "eventGen", fromPoint: "right", triggerDirection: "right" },
-    ],
-    rejectFrom: [
-      { fromId: "rootConfirm", fromPoint: "up", triggerDirection: "down" },
-    ],
-    status: 2,
-  },
-  {
-    id: "impact",
-    x: 300,
-    y: 300,
-    text: "影响初定界",
-    role: "监控",
-    time: "10:00",
-    userName: "张三",
-    userDept: "省监控",
-    from: [
-      { fromId: "eventGen", fromPoint: "right", triggerDirection: "right" },
-    ],
-    status: 2,
-  },
-  {
-    id: "rootConfirm",
-    x: 490,
-    y: initHeight,
-    text: "根因定界确认",
-    role: "专业",
-    from: [
-      { fromId: "rootCause", fromPoint: "right", triggerDirection: "right" },
-    ],
-    status: 3,
-  },
-  {
-    id: "impactConfirm",
-    x: 490,
-    y: 300,
-    text: "影响定界确认",
-    role: "专业",
-    from: [{ fromId: "impact", fromPoint: "right", triggerDirection: "right" }],
-    status: 1,
-  },
-  {
-    id: "impactSum",
-    x: 680,
-    y: 300,
-    text: "影响汇总",
-    role: "监控",
-    from: [
-      {
-        fromId: "impactConfirm",
-        fromPoint: "right",
-        triggerDirection: "right",
-      },
-    ],
-    status: 0,
-  },
-  {
-    id: "rootHandle",
-    x: 920,
-    y: initHeight,
-    text: "根因定位处理",
-    role: "专业",
-    from: [
-      {
-        fromId: "rootConfirm",
-        fromPoint: "right",
-        triggerDirection: "right",
-      },
-    ],
-    status: 0,
-  },
-  {
-    id: "impactHandle",
-    x: 920,
-    y: 300,
-    text: "影响核实处理",
-    role: "专业",
-    from: [
-      {
-        fromId: "impactSum",
-        fromPoint: "right",
-        triggerDirection: "right",
-      },
-    ],
-    status: 0,
-  },
-  {
-    id: "recover",
-    x: 1160,
-    y: initHeight,
-    text: "恢复验证",
-    role: "监控",
-    from: [
-      {
-        fromId: "impactHandle",
-        fromPoint: "right",
-        triggerDirection: "up",
-      },
-      {
-        fromId: "rootHandle",
-        fromPoint: "right",
-        triggerDirection: "right",
-      },
-    ],
-    status: 0,
-  },
-  {
-    id: "close",
-    x: 1160,
-    y: 60,
-    text: "事件闭环",
-    role: "监控",
-    from: [
-      {
-        fromId: "recover",
-        fromPoint: "up",
-        triggerDirection: "up",
-      },
-    ],
-    status: 0,
-  },
-  {
-    id: "over",
-    x: 1390,
-    y: initHeight,
-    text: "结束",
-    from: [
-      {
-        fromId: "recover",
-        fromPoint: "right",
-        triggerDirection: "right",
-      },
-    ],
-    status: 0,
-  },
-];
+const ORIGINAL_FLOW_DATA = {
+  nodes: [
+    {
+      id: "eventGen",
+      x: 50,
+      y: 180,
+      text: "事件生成",
+      role: "监控",
+      time: "10:00",
+      userName: "张三",
+      userDept: "省监控",
+      status: 2,
+    },
+    {
+      id: "confirm",
+      x: 300,
+      y: 60,
+      text: "真实性确认",
+      role: "专业",
+      time: "10:00",
+      userName: "张三",
+      userDept: "省监控",
+      from: [
+        { fromId: "eventGen", fromPoint: "right", triggerDirection: "right" },
+      ],
+      status: 2,
+    },
+    {
+      id: "rootCause",
+      x: 300,
+      y: 180,
+      text: "根因初定界",
+      role: "监控",
+      time: "10:00",
+      userName: "张三",
+      userDept: "省监控",
+      from: [
+        { fromId: "eventGen", fromPoint: "right", triggerDirection: "right" },
+      ],
+      rejectFrom: [
+        { fromId: "rootConfirm", fromPoint: "up", triggerDirection: "down" },
+      ],
+      status: 2,
+    },
+    {
+      id: "impact",
+      x: 300,
+      y: 300,
+      text: "影响初定界",
+      role: "监控",
+      time: "10:00",
+      userName: "张三",
+      userDept: "省监控",
+      from: [
+        { fromId: "eventGen", fromPoint: "right", triggerDirection: "right" },
+      ],
+      status: 2,
+    },
+    {
+      id: "rootConfirm",
+      x: 490,
+      y: 180,
+      text: "根因定界确认",
+      role: "专业",
+      from: [
+        { fromId: "rootCause", fromPoint: "right", triggerDirection: "right" },
+      ],
+      status: 3,
+    },
+    {
+      id: "impactConfirm",
+      x: 490,
+      y: 300,
+      text: "影响定界确认",
+      role: "专业",
+      from: [
+        { fromId: "impact", fromPoint: "right", triggerDirection: "right" },
+      ],
+      status: 1,
+    },
+    {
+      id: "impactSum",
+      x: 680,
+      y: 300,
+      text: "影响汇总",
+      role: "监控",
+      from: [
+        {
+          fromId: "impactConfirm",
+          fromPoint: "right",
+          triggerDirection: "right",
+        },
+      ],
+      status: 0,
+    },
+    {
+      id: "rootHandle",
+      x: 920,
+      y: 180,
+      text: "根因定位处理",
+      role: "专业",
+      from: [
+        {
+          fromId: "rootConfirm",
+          fromPoint: "right",
+          triggerDirection: "right",
+        },
+      ],
+      status: 0,
+    },
+    {
+      id: "impactHandle",
+      x: 920,
+      y: 300,
+      text: "影响核实处理",
+      role: "专业",
+      from: [
+        {
+          fromId: "impactSum",
+          fromPoint: "right",
+          triggerDirection: "right",
+        },
+      ],
+      status: 0,
+    },
+    {
+      id: "recover",
+      x: 1150,
+      y: 180,
+      text: "恢复验证",
+      role: "监控",
+      from: [
+        {
+          fromId: "impactHandle",
+          fromPoint: "right",
+          triggerDirection: "up",
+        },
+        {
+          fromId: "rootHandle",
+          fromPoint: "right",
+          triggerDirection: "right",
+        },
+      ],
+      status: 0,
+    },
+    {
+      id: "close",
+      x: 1150,
+      y: 60,
+      text: "事件闭环",
+      role: "监控",
+      from: [
+        {
+          fromId: "recover",
+          fromPoint: "up",
+          triggerDirection: "up",
+        },
+      ],
+      status: 0,
+    },
+    {
+      id: "over",
+      x: 1390,
+      y: 180,
+      text: "结束",
+      from: [
+        {
+          fromId: "recover",
+          fromPoint: "right",
+          triggerDirection: "right",
+        },
+      ],
+      status: 0,
+    },
+  ],
+  rectWidth: 140,
+  rectHeight: 90,
+  spaceHeight: 30,
+};
 
 export default {
   name: "FlowChartWithArrow",
@@ -267,113 +231,50 @@ export default {
       flowData: JSON.parse(JSON.stringify(ORIGINAL_FLOW_DATA)),
       selectedNode: "", // 记录选中的节点ID
       nodeElements: {}, // 存储所有节点元素，用于高亮/交互
-      mainHeight: 450,
-      count: 1,
     };
   },
   mounted() {
-    this.init();
+    this.$nextTick(() => {
+      this.initZRender();
+      this.renderFlowChart();
+    });
   },
   beforeUnmount() {
     if (this.zr) this.zr.dispose();
   },
   methods: {
-    init() {
-      this.getNodes();
-      this.$nextTick(() => {
-        this.initZRender();
-        this.renderFlowChart();
-      });
-    },
-    getNodes() {
-      this.flowData.forEach((item) => {
-        if (
-          item.id === "impact" ||
-          item.id === "impactConfirm" ||
-          item.id === "impactSum" ||
-          item.id === "impactHandle"
-        ) {
-          item.y = this.count * (rectHeight + spaceHeight) + initHeight;
-        }
-      });
-      for (let i = 0; i < this.count - 1; i++) {
-        this.flowData.push(
-          {
-            id: `rootConfirm${i}`,
-            x: 490,
-            y: (i + 1) * (rectHeight + spaceHeight) + initHeight,
-            text: "根因定界确认",
-            role: "专业",
-            from: [
-              {
-                fromId: "rootCause",
-                fromPoint: "right",
-                triggerDirection: "right",
-              },
-            ],
-            status: 0,
-          },
-          {
-            id: `rootHandle${i}`,
-            x: 920,
-            y: (i + 1) * (rectHeight + spaceHeight) + initHeight,
-            text: "根因定位处理",
-            role: "专业",
-            from: [
-              {
-                fromId: `rootConfirm${i}`,
-                fromPoint: "right",
-                triggerDirection: "right",
-              },
-            ],
-            status: 0,
-          },
-        );
-        const idx = this.flowData.findIndex((n) => n.id === "recover");
-        if (idx)
-          this.flowData[idx].from.push({
-            fromId: `rootHandle${i}`,
-            fromPoint: "right",
-            triggerDirection: "right",
-          });
-      }
-      this.mainHeight =
-        this.count * (rectHeight + spaceHeight) +
-        initHeight +
-        initHeight -
-        spaceHeight;
-    },
     initZRender() {
       const container = this.$refs.flowContainer;
       this.zr = zrender.init(container);
       console.log(
         "ZRender 初始化完成，容器尺寸：",
         container.clientWidth,
-        container.clientHeight,
+        container.clientHeight
       );
     },
     // 绘制节点
     drawNode(node) {
+      const { rectWidth, rectHeight } = this.flowData;
       const bg =
         node.status === 0
           ? notStartedStatus.bg
           : node.status === 1
-            ? processingStatus.bg
-            : node.status === 2
-              ? completeStatus.bg
-              : node.status === 3
-                ? rejectedStatus.bg
-                : "";
+          ? processingStatus.bg
+          : node.status === 2
+          ? completeStatus.bg
+          : node.status === 3
+          ? rejectedStatus.bg
+          : "";
       const roleBg =
         node.status === 0
           ? notStartedStatus.roleBg
           : node.status === 1
-            ? processingStatus.roleBg
-            : node.status === 2
-              ? completeStatus.roleBg
-              : node.status === 3
-                ? rejectedStatus.roleBg
-                : "";
+          ? processingStatus.roleBg
+          : node.status === 2
+          ? completeStatus.roleBg
+          : node.status === 3
+          ? rejectedStatus.roleBg
+          : "";
       // 节点矩形
       const rect = new zrender.Rect({
         id: node.id,
@@ -550,18 +451,18 @@ export default {
         fromNode.status === 0
           ? notStartedStatus.roleBg
           : fromNode.status === 1
-            ? notStartedStatus.roleBg
-            : fromNode.status === 2
-              ? completeStatus.roleBg
-              : fromNode.status === 3
-                ? notStartedStatus.roleBg
-                : "";
+          ? notStartedStatus.roleBg
+          : fromNode.status === 2
+          ? completeStatus.roleBg
+          : fromNode.status === 3
+          ? notStartedStatus.roleBg
+          : "";
       // 绘制起点的圆
       if (fromInfo.fromPoint === "right") {
         const circle = new zrender.Circle({
           shape: {
-            cx: fromNode.x + rectWidth + 4,
-            cy: fromNode.y + rectHeight / 2,
+            cx: fromNode.x + this.flowData.rectWidth + 4,
+            cy: fromNode.y + this.flowData.rectHeight / 2,
             r: 4,
           },
           style: {
@@ -572,7 +473,7 @@ export default {
       } else if (fromInfo.fromPoint === "up") {
         const circle = new zrender.Circle({
           shape: {
-            cx: fromNode.x + rectWidth / 2,
+            cx: fromNode.x + this.flowData.rectWidth / 2,
             cy: fromNode.y - 4,
             r: 4,
           },
@@ -585,9 +486,9 @@ export default {
       if (fromInfo.triggerDirection === "right") {
         // 绘制终点的三角形
         const trianglePoints = [
-          [toNode.x - 2, toNode.y + rectHeight / 2], // 尖点
-          [toNode.x - 12, toNode.y + rectHeight / 2 - 6], // 左底点
-          [toNode.x - 12, toNode.y + rectHeight / 2 + 6], // 右底点
+          [toNode.x - 2, toNode.y + this.flowData.rectHeight / 2], // 尖点
+          [toNode.x - 12, toNode.y + this.flowData.rectHeight / 2 - 6], // 左底点
+          [toNode.x - 12, toNode.y + this.flowData.rectHeight / 2 + 6], // 右底点
         ];
         const triangle = new zrender.Polygon({
           shape: {
@@ -602,16 +503,19 @@ export default {
         // 如果是左上角和右下角连线，可以考虑使用折线，中间加一个拐点，如果是水平连线或者垂直连线，直接画直线
         if (fromNode.y !== toNode.y && fromNode.x !== toNode.x) {
           const polylinePoints = [
-            [fromNode.x + rectWidth, fromNode.y + rectHeight / 2], // 起点
             [
-              (toNode.x + fromNode.x + rectWidth) / 2,
-              fromNode.y + rectHeight / 2,
+              fromNode.x + this.flowData.rectWidth,
+              fromNode.y + this.flowData.rectHeight / 2,
+            ], // 起点
+            [
+              (toNode.x + fromNode.x + this.flowData.rectWidth) / 2,
+              fromNode.y + this.flowData.rectHeight / 2,
             ], // 拐点1（水平右移）
             [
-              (toNode.x + fromNode.x + rectWidth) / 2,
-              toNode.y + rectHeight / 2,
+              (toNode.x + fromNode.x + this.flowData.rectWidth) / 2,
+              toNode.y + this.flowData.rectHeight / 2,
             ], // 拐点2（垂直上下移）
-            [toNode.x - 10, toNode.y + rectHeight / 2], // 终点
+            [toNode.x - 10, toNode.y + this.flowData.rectHeight / 2], // 终点
           ];
           const polyline = new zrender.Polyline({
             shape: {
@@ -627,10 +531,10 @@ export default {
         } else {
           const line = new zrender.Line({
             shape: {
-              x1: fromNode.x + rectWidth,
-              y1: fromNode.y + rectHeight / 2,
+              x1: fromNode.x + this.flowData.rectWidth,
+              y1: fromNode.y + this.flowData.rectHeight / 2,
               x2: toNode.x - 10,
-              y2: toNode.y + rectHeight / 2,
+              y2: toNode.y + this.flowData.rectHeight / 2,
             },
             style: { stroke: lineColor, lineWidth: 2, fill: "none" },
           });
@@ -639,9 +543,18 @@ export default {
       } else if (fromInfo.triggerDirection === "up") {
         // 绘制终点的三角形
         const trianglePoints = [
-          [toNode.x + rectWidth / 2, toNode.y + rectHeight + 2], // 尖点
-          [toNode.x + rectWidth / 2 - 6, toNode.y + rectHeight + 12], // 左底点
-          [toNode.x + rectWidth / 2 + 6, toNode.y + rectHeight + 12], // 右底点
+          [
+            toNode.x + this.flowData.rectWidth / 2,
+            toNode.y + this.flowData.rectHeight + 2,
+          ], // 尖点
+          [
+            toNode.x + this.flowData.rectWidth / 2 - 6,
+            toNode.y + this.flowData.rectHeight + 12,
+          ], // 左底点
+          [
+            toNode.x + this.flowData.rectWidth / 2 + 6,
+            toNode.y + this.flowData.rectHeight + 12,
+          ], // 右底点
         ];
         const triangle = new zrender.Polygon({
           shape: {
@@ -656,9 +569,18 @@ export default {
         // 如果是左上角和右下角连线，可以考虑使用折线，中间加一个拐点，如果是水平连线或者垂直连线，直接画直线
         if (fromNode.y !== toNode.y && fromNode.x !== toNode.x) {
           const polylinePoints = [
-            [fromNode.x + rectWidth, fromNode.y + rectHeight / 2], // 起点）
-            [toNode.x + rectWidth / 2, fromNode.y + rectHeight / 2], // 拐点1（水平右移）
-            [toNode.x + rectWidth / 2, toNode.y + rectHeight + 2], // 终点
+            [
+              fromNode.x + this.flowData.rectWidth,
+              fromNode.y + this.flowData.rectHeight / 2,
+            ], // 起点）
+            [
+              toNode.x + this.flowData.rectWidth / 2,
+              fromNode.y + this.flowData.rectHeight / 2,
+            ], // 拐点1（水平右移）
+            [
+              toNode.x + this.flowData.rectWidth / 2,
+              toNode.y + this.flowData.rectHeight + 2,
+            ], // 终点
           ];
           const polyline = new zrender.Polyline({
             shape: {
@@ -673,10 +595,10 @@ export default {
         } else {
           const line = new zrender.Line({
             shape: {
-              x1: toNode.x + rectWidth / 2,
+              x1: toNode.x + this.flowData.rectWidth / 2,
               y1: fromNode.y,
-              x2: toNode.x + rectWidth / 2,
-              y2: toNode.y + rectHeight + 2,
+              x2: toNode.x + this.flowData.rectWidth / 2,
+              y2: toNode.y + this.flowData.rectHeight + 2,
             },
             style: { stroke: lineColor, lineWidth: 2, fill: "none" },
           });
@@ -692,7 +614,7 @@ export default {
       if (fromInfo.fromPoint === "up") {
         const circle = new zrender.Circle({
           shape: {
-            cx: fromNode.x + rectWidth / 2,
+            cx: fromNode.x + this.flowData.rectWidth / 2,
             cy: fromNode.y - 4,
             r: 4,
           },
@@ -705,9 +627,9 @@ export default {
       if (fromInfo.triggerDirection === "down") {
         // 绘制终点的三角形
         const trianglePoints = [
-          [toNode.x + rectWidth / 2, toNode.y], // 尖点
-          [toNode.x + rectWidth / 2 - 6, toNode.y - 12], // 左底点
-          [toNode.x + rectWidth / 2 + 6, toNode.y - 12], // 右底点
+          [toNode.x + this.flowData.rectWidth / 2, toNode.y], // 尖点
+          [toNode.x + this.flowData.rectWidth / 2 - 6, toNode.y - 12], // 左底点
+          [toNode.x + this.flowData.rectWidth / 2 + 6, toNode.y - 12], // 右底点
         ];
         const triangle = new zrender.Polygon({
           shape: {
@@ -722,10 +644,10 @@ export default {
       // 绘制连线折现
       if (fromInfo.fromPoint === "up" && fromInfo.triggerDirection === "down") {
         const polylinePoints = [
-          [fromNode.x + rectWidth / 2, fromNode.y - 4], // 起点）
-          [fromNode.x + rectWidth / 2, fromNode.y - 17], // 拐点1（水平上移）
-          [toNode.x + rectWidth / 2, fromNode.y - 17], // 拐点2（水平上移）
-          [toNode.x + rectWidth / 2, toNode.y], // 终点
+          [fromNode.x + this.flowData.rectWidth / 2, fromNode.y - 4], // 起点）
+          [fromNode.x + this.flowData.rectWidth / 2, fromNode.y - 17], // 拐点1（水平上移）
+          [toNode.x + this.flowData.rectWidth / 2, fromNode.y - 17], // 拐点2（水平上移）
+          [toNode.x + this.flowData.rectWidth / 2, toNode.y], // 终点
         ];
         const polyline = new zrender.Polyline({
           shape: {
@@ -747,7 +669,7 @@ export default {
             text: "驳回",
             fontSize: 14,
             fill: lineColor,
-            x: (fromNode.x + toNode.x) / 2 + rectWidth / 2 - 10,
+            x: (fromNode.x + toNode.x) / 2 + this.flowData.rectWidth / 2 - 10,
             y: fromNode.y - 35,
           },
         });
@@ -764,31 +686,31 @@ export default {
       if (!this.zr) return;
       this.zr.clear();
       // 绘制所有节点
-      this.flowData.forEach((node) => {
+      this.flowData.nodes.forEach((node) => {
         this.drawNode(node);
         if (node.from?.length) {
           node.from.find((fromInfo) => {
-            const fromNode = this.flowData.find(
-              (n) => n.id === fromInfo.fromId,
+            const fromNode = this.flowData.nodes.find(
+              (n) => n.id === fromInfo.fromId
             );
             if (fromNode) this.drawLine(fromNode, node, fromInfo);
           });
         }
         if (node.rejectFrom?.length) {
           node.rejectFrom.find((fromInfo) => {
-            const fromNode = this.flowData.find(
-              (n) => n.id === fromInfo.fromId,
+            const fromNode = this.flowData.nodes.find(
+              (n) => n.id === fromInfo.fromId
             );
             if (fromNode) this.drawRejectLine(fromNode, node, fromInfo);
           });
         }
       });
     },
+
     // 清空重绘（恢复原始数据）
     reRenderFull() {
-      this.count = 1;
       this.flowData = JSON.parse(JSON.stringify(ORIGINAL_FLOW_DATA));
-      this.init();
+      this.renderFlowChart();
     },
   },
 };
@@ -803,82 +725,23 @@ export default {
   padding: 10px;
   .process-main {
     display: flex;
-    align-items: center;
+    justify-content: space-around;
     margin-bottom: 20px;
-    overflow: hidden;
     .process-item {
-      position: relative;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #666;
+      width: 200px;
+      padding: 10px 20px;
+      background-color: #f0f0f0;
+      border-radius: 4px;
       font-weight: bold;
       text-align: center;
-      width: 216.5px;
-      height: 40px;
-      box-sizing: border-box;
-      margin-left: 20px;
-      z-index: 1;
-      background: #f0f0f0;
-      /* 左侧凹角 */
-      &::before {
-        content: "";
-        position: absolute;
-        left: 0;
-        top: 0;
-        width: 0;
-        height: 0;
-        border-top: 20px solid transparent;
-        border-bottom: 20px solid transparent;
-        border-left: 20px solid #fff;
-        z-index: 2;
-      }
-      /* 右侧尖角 */
-      &::after {
-        content: "";
-        position: absolute;
-        right: -20px;
-        top: 0;
-        width: 0;
-        height: 0;
-        border-top: 20px solid transparent;
-        border-bottom: 20px solid transparent;
-        border-left: 20px solid #f0f0f0;
-        z-index: 1;
-      }
-      .step-content {
-        z-index: 3;
-      }
-      // 已完成状态
-      &.complete {
-        background: #26be2a;
-        color: #142814;
-        &::after {
-          border-left-color: #26be2a;
-        }
-      }
-      // 定界状态
       &.process-bound {
-        width: 613px;
-        background: #2396f5;
-        color: #142814;
-        &::after {
-          border-left-color: #2396f5;
-        }
+        width: 600px;
+        border: 2px solid #1890ff;
+        background-color: #e6f7ff;
       }
-      // 第一个元素去掉左侧凹角
-      &:first-child {
-        margin-left: 0;
-        &::before {
-          display: none;
-        }
+      &.complete {
+        background-color: #dfffe3;
       }
-      // // 最后一个元素去掉右侧尖角
-      // &:last-child {
-      //   &::after {
-      //     display: none;
-      //   }
-      // }
     }
   }
 }
@@ -908,6 +771,7 @@ export default {
 }
 .flow-container {
   width: 1580px;
+  height: 550px;
   margin: 20px auto;
   border: 1px solid #ccc;
   background-color: #ffffff;
@@ -924,9 +788,5 @@ button {
 }
 button:hover {
   background-color: #40a9ff;
-}
-
-.process-detail {
-  padding: 23px 29px;
 }
 </style>
