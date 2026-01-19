@@ -1044,6 +1044,7 @@ export default {
         display: flex;
         flex-wrap: wrap;
         margin-bottom: 10px;
+        border-radius: 5px;
         .detail-item {
           width: 50%;
           padding: 5px 10px;
@@ -1062,6 +1063,7 @@ export default {
         background-color: #fff2f3;
         display: flex;
         flex-wrap: wrap;
+        border-radius: 5px;
         .detail-item {
           width: 50%;
           padding: 5px 10px;
@@ -1109,6 +1111,7 @@ export default {
           background-color: #f8f9fa;
           display: flex;
           flex-wrap: wrap;
+          border-radius: 5px;
           .detail-item {
             width: 50%;
             padding: 5px 10px;
